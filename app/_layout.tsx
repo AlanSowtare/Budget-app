@@ -1,18 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Stack} from 'expo-router';
-import {StatusBar} from 'expo-status-bar';
-import {useFonts} from 'expo-font';
+import React, { useEffect } from 'react';
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import {SafeAreaProvider} from "react-native-safe-area-context";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useBudgetStore } from '@/store/budgetStore';
 
-// Permet de cacher l'écran de chargement (SplashScreen) manuellement
 SplashScreen.preventAutoHideAsync();
 
-
 export default function RootLayout() {
-
-    const [isReady, setIsReady] = useState(false);
-
 
     const [fontsLoaded] = useFonts({
         'Syne-Bold': require('../assets/fonts/Syne-Bold.ttf'),
@@ -21,29 +17,33 @@ export default function RootLayout() {
         'DMSans-Medium': require('../assets/fonts/DMSans-Medium.ttf'),
     });
 
+    const loadBudgets = useBudgetStore(state => state.loadBudgets);
+    const isLoading = useBudgetStore(state => state.isLoading);
+
     useEffect(() => {
         if (fontsLoaded) {
-            SplashScreen.hideAsync(); // Cache le splash screen
-            setIsReady(true);         // Met à jour notre state local
+            loadBudgets().then(() => {
+                SplashScreen.hideAsync();
+            });
         }
-    }, [fontsLoaded]); // ← tableau de dépendances : ne se relance que si fontsLoaded change
+    }, [fontsLoaded, loadBudgets]);
 
-    if (!isReady) return null;
+    // On attend que les fonts ET les données soient prêtes
+    if (!fontsLoaded || isLoading) return null;
 
     return (
         <SafeAreaProvider>
             <>
                 <StatusBar style="light" />
-                <Stack screenOptions={{headerShown: false}}>
-                    <Stack.Screen name="index"/>
-                    <Stack.Screen name="onboarding"/>
-                    <Stack.Screen name="(home)/index"/>
-                    <Stack.Screen
-                        name="add-category"
-                        options={{ presentation: 'modal' }}
-                    />
+                <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="index" />
+                    <Stack.Screen name="onboarding" />
+                    <Stack.Screen name="(home)/index" />
+                    <Stack.Screen name="category/[id]" />
+                    <Stack.Screen name="add-category" options={{ presentation: 'modal' }} />
+                    <Stack.Screen name="add-expense" options={{ presentation: 'modal' }} />
                 </Stack>
-        </>
+            </>
         </SafeAreaProvider>
     );
 }

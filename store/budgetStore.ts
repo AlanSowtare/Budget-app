@@ -1,12 +1,13 @@
-import { create } from 'zustand';
-import { Budget, Category, Expense } from '../domain/entities/Budget';
-
+import {create} from 'zustand';
+import {Budget, Category, Expense} from '@/domain/entities/Budget';
+import {budgetRepository} from "@/repositories/SQLiteBudgetRepository";
 
 interface BudgetStore {
-
     budgets: Budget[];
-    activeBudgetId: string | null;  // l'ID du budget affiché en ce moment
+    activeBudgetId: string | null;
+    isLoading: boolean; // nouveau — indique si les données sont en cours de chargement
 
+    loadBudgets: () => Promise<void>; // nouveau — charge depuis SQLite
     getActiveBudget: () => Budget | null;
     createBudget: (month: number, year: number, totalAmount: number) => void;
     addCategory: (budgetId: string, category: Omit<Category, 'id'>) => void;
@@ -16,19 +17,29 @@ interface BudgetStore {
 const generateId = () => Math.random().toString(36).slice(2);
 
 export const useBudgetStore = create<BudgetStore>((set, get) => ({
+
     budgets: [],
     activeBudgetId: null,
+    isLoading: true,
+
+    // ── CHARGE LES DONNÉES AU DÉMARRAGE ──
+    loadBudgets: async () => {
+        const budgets = await budgetRepository.getAll();
+
+        // Le budget actif = le plus récent (dernier du tableau)
+        const activeBudgetId = budgets.length > 0
+            ? budgets[budgets.length - 1].id
+            : null;
+
+        set({budgets, activeBudgetId, isLoading: false});
+    },
 
     getActiveBudget: () => {
-        const { budgets, activeBudgetId } = get();
+        const {budgets, activeBudgetId} = get();
         return budgets.find(b => b.id === activeBudgetId) ?? null;
     },
 
-
-    // ── createBudget ──
-    // Crée un nouveau budget et le définit comme actif.
     createBudget: (month, year, totalAmount) => {
-
         const newBudget: Budget = {
             id: generateId(),
             month,
@@ -37,45 +48,51 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
             categories: [],
             expenses: [],
         };
+
         set(state => ({
-            budgets: [...state.budgets, newBudget],  // nouveau tableau avec le budget ajouté
-            activeBudgetId: newBudget.id,            // on le définit comme actif
+            budgets: [...state.budgets, newBudget],
+            activeBudgetId: newBudget.id,
         }));
+
+        // Sauvegarde en base après la mise à jour du state
+        budgetRepository.save(newBudget);
     },
+
     addCategory: (budgetId, category) => {
-        set(state => ({
-            budgets: state.budgets.map(budget =>
-                budget.id === budgetId
-                    ? {
-                        ...budget, // on copie tout le budget existant
-                        categories: [
-                            ...budget.categories,                    // les catégories existantes
-                            { ...category, id: generateId() },       // + la nouvelle avec son id
-                        ],
-                    }
-                    : budget
-            ),
-        }));
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
+                    ? {...b, categories: [...b.categories, {...category, id: generateId()}]}
+                    : b
+            );
+
+            // Trouve le budget modifié et le sauvegarde
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return {budgets: updatedBudgets};
+        });
     },
 
     addExpense: (budgetId, expense) => {
-        set(state => ({
-            budgets: state.budgets.map(budget =>
-                budget.id === budgetId
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
                     ? {
-                        ...budget,
+                        ...b,
                         expenses: [
-                            ...budget.expenses,
-                            {
-                                ...expense,
-                                id: generateId(),
-                                date: new Date().toISOString(), // date actuelle au format ISO
-                            },
+                            ...b.expenses,
+                            {...expense, id: generateId(), date: new Date().toISOString()},
                         ],
                     }
-                    : budget
-            ),
-        }));
+                    : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return {budgets: updatedBudgets};
+        });
     },
 
 }));
