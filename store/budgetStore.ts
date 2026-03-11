@@ -12,6 +12,8 @@ interface BudgetStore {
     createBudget: (month: number, year: number, totalAmount: number) => void;
     addCategory: (budgetId: string, category: Omit<Category, 'id'>) => void;
     addExpense: (budgetId: string, expense: Omit<Expense, 'id' | 'date'>) => void;
+    deleteExpense: (budgetId: string, expenseId: string) => void;
+    deleteCategory: (budgetId: string, categoryId: string) => void;
 }
 
 const generateId = () => Math.random().toString(36).slice(2);
@@ -92,6 +94,41 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
             if (updatedBudget) budgetRepository.save(updatedBudget);
 
             return {budgets: updatedBudgets};
+        });
+    },
+
+    deleteExpense: (budgetId, expenseId) => {
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
+                    ? { ...b, expenses: b.expenses.filter(e => e.id !== expenseId) }
+                    : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return { budgets: updatedBudgets };
+        });
+    },
+
+    deleteCategory: (budgetId, categoryId) => {
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
+                    ? {
+                        ...b,
+                        categories: b.categories.filter(c => c.id !== categoryId),
+                        // On supprime aussi toutes les dépenses liées à cette catégorie
+                        expenses: b.expenses.filter(e => e.categoryId !== categoryId),
+                    }
+                    : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return { budgets: updatedBudgets };
         });
     },
 

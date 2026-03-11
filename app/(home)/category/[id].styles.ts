@@ -15,7 +15,15 @@ export const styles = StyleSheet.create({
 
     // ── HEADER ──
     header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // ← espace entre retour et supprimer
+        alignItems: 'center',
         paddingVertical: spacing.md,
+    },
+    deleteBtn: {
+        fontFamily: 'DMSans-Medium',
+        fontSize: fontSize.sm,
+        color: colors.danger,
     },
     backBtn: {
         alignSelf: 'flex-start',

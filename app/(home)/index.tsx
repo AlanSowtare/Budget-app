@@ -4,7 +4,7 @@ import {
     Text,
     FlatList,
     TouchableOpacity,
-    SafeAreaView,  // respecte les encoches iPhone (notch, dynamic island)
+    SafeAreaView, Alert,  // respecte les encoches iPhone (notch, dynamic island)
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useBudgetStore } from '../../store/budgetStore';
@@ -31,6 +31,8 @@ export default function HomeScreen() {
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
     const budget = budgets.find(b => b.id === activeBudgetId) ?? null;
 
+    const deleteCategory = useBudgetStore(state => state.deleteCategory);
+
     const insets = useSafeAreaInsets();
 
     // useMemo — calcule le total dépensé uniquement si budget change
@@ -54,14 +56,31 @@ export default function HomeScreen() {
             ? colors.warning
             : colors.accent;
 
+    const handleLongPressCategory = (item: Category) => {
+        Alert.alert(
+            `Supprimer "${item.name}" ?`,
+            'Toutes les dépenses associées seront supprimées.',
+            [
+                { text: 'Annuler', style: 'cancel' },
+                {
+                    text: 'Supprimer',
+                    style: 'destructive',
+                    onPress: () => {
+                        if (budget) deleteCategory(budget.id, item.id);
+                    },
+                },
+            ]
+        );
+    };
+
     const renderCategory = ({ item }: { item: Category }) => {
 
         const categorySpent = budget?.expenses
             .filter(e => e.categoryId === item.id)
             .reduce((sum, e) => sum + e.amount, 0) ?? 0;
 
-        const categoryPercent = Math.min(
-            (categorySpent / item.allocatedAmount) * 100, 100
+        const categoryPercent = Math.max(
+            ((item.allocatedAmount - categorySpent) / item.allocatedAmount) * 100, 0
         );
 
         const isOver = categorySpent > item.allocatedAmount;
@@ -70,8 +89,9 @@ export default function HomeScreen() {
         return (
             <TouchableOpacity
                 style={styles.catTile}
-                onPress={() => router.push(`/category/${item.id}` as any )}
-                // ↑ on navigue vers l'écran détail — on le créera plus tard
+                onPress={() => router.push(`/category/${item.id}` as any)}
+                onLongPress={() => handleLongPressCategory(item)}
+                delayLongPress={400}
             >
                 {/* Bordure colorée en haut */}
                 <View style={[styles.catTileBorder, { backgroundColor: colorSet.base }]} />
@@ -89,9 +109,9 @@ export default function HomeScreen() {
 
                 {/* Montant */}
                 <Text style={[styles.catSpent, isOver && styles.catSpentOver]}>
-                    {categorySpent} €
+                    {item.allocatedAmount - categorySpent} €
                 </Text>
-                <Text style={styles.catBudget}>sur {item.allocatedAmount} €</Text>
+                <Text style={styles.catBudget}>restant sur {item.allocatedAmount} €</Text>
 
                 {/* Barre de progression */}
                 <View style={styles.catProgressTrack}>
@@ -152,10 +172,10 @@ export default function HomeScreen() {
                         <View style={styles.budgetCard}>
                             <Text style={styles.budgetLabel}>Budget du mois</Text>
                             <Text style={styles.budgetAmount}>
-                                {budget?.totalAmount ?? 0} <Text style={styles.budgetCurrency}>€</Text>
+                                {remaining} <Text style={styles.budgetCurrency}>€</Text>
                             </Text>
                             <Text style={styles.budgetSub}>
-                                Reste <Text style={styles.budgetRemaining}>{remaining} €</Text> disponible
+                                sur <Text style={styles.budgetRemaining}>{budget?.totalAmount ?? 0} €</Text> ce mois
                             </Text>
 
                             {/* Barre de progression globale */}
