@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
         gap: spacing.xs,
     },
     label: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
         opacity: 0.3,
     },
     btnText: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: 22,
         color: colors.accent,
         lineHeight: 24,
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     value: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: fontSize.xl,
         color: colors.text,
     },

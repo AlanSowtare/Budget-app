@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     },
 
     title: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.xxl,
         color: colors.text,
     },
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     },
 
     label: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -55,21 +55,21 @@ export const styles = StyleSheet.create({
         paddingVertical: spacing.md,
     },
     currency: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: 36,
         color: colors.textMuted,
         marginRight: spacing.sm,
     },
     amountInput: {
         flex: 1,
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: 48,
         color: colors.text,
         letterSpacing: -1,
     },
 
     input: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.lg,
         color: colors.text,
         backgroundColor: colors.surface,
@@ -121,7 +121,7 @@ export const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.lg,
         color: '#0d2e22',
     },

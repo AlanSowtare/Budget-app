@@ -177,12 +177,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     expenseLabel: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.md,
         color: colors.text,
     },
     expenseDate: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.xs,
         color: colors.textMuted,
         marginTop: 2,
