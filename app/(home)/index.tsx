@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 import {
     View,
     Text,
     FlatList,
     TouchableOpacity,
-    SafeAreaView, Alert,  // respecte les encoches iPhone (notch, dynamic island)
+    Alert,  // respecte les encoches iPhone (notch, dynamic island)
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useBudgetStore } from '../../store/budgetStore';
-import { colors } from '../../constants/theme';
-import { styles } from './index.styles';
-import { Category } from '../../domain/entities/Budget';
+import {useRouter} from 'expo-router';
+import {useBudgetStore} from '@/store/budgetStore';
+import {colors} from '@/constants/theme';
+import {styles} from './index.styles';
+import {Category} from '@/domain/entities/Budget';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {MONTHS} from "@/constants/months";
 
@@ -18,11 +18,11 @@ import {MONTHS} from "@/constants/months";
 // Map couleur → valeurs du theme
 // Permet de retrouver la bonne couleur à partir du champ "color" d'une Category
 const COLOR_MAP: Record<string, { base: string; dim: string }> = {
-    blue:   { base: colors.blue,   dim: colors.blueDim },
-    purple: { base: colors.purple, dim: colors.purpleDim },
-    orange: { base: colors.orange, dim: colors.orangeDim },
-    pink:   { base: colors.pink,   dim: colors.pinkDim },
-    danger: { base: colors.danger, dim: colors.dangerDim },
+    blue: {base: colors.blue, dim: colors.blueDim},
+    purple: {base: colors.purple, dim: colors.purpleDim},
+    orange: {base: colors.orange, dim: colors.orangeDim},
+    pink: {base: colors.pink, dim: colors.pinkDim},
+    danger: {base: colors.danger, dim: colors.dangerDim},
 };
 
 export default function HomeScreen() {
@@ -61,7 +61,7 @@ export default function HomeScreen() {
             `Supprimer "${item.name}" ?`,
             'Toutes les dépenses associées seront supprimées.',
             [
-                { text: 'Annuler', style: 'cancel' },
+                {text: 'Annuler', style: 'cancel'},
                 {
                     text: 'Supprimer',
                     style: 'destructive',
@@ -73,7 +73,7 @@ export default function HomeScreen() {
         );
     };
 
-    const renderCategory = ({ item }: { item: Category }) => {
+    const renderCategory = ({item}: { item: Category }) => {
 
         const categorySpent = budget?.expenses
             .filter(e => e.categoryId === item.id)
@@ -94,10 +94,10 @@ export default function HomeScreen() {
                 delayLongPress={400}
             >
                 {/* Bordure colorée en haut */}
-                <View style={[styles.catTileBorder, { backgroundColor: colorSet.base }]} />
+                <View style={[styles.catTileBorder, {backgroundColor: colorSet.base}]}/>
 
                 {/* Icône */}
-                <View style={[styles.catIcon, { backgroundColor: colorSet.dim }]}>
+                <View style={[styles.catIcon, {backgroundColor: colorSet.dim}]}>
                     <Text style={styles.catEmoji}>{item.emoji}</Text>
                 </View>
 
@@ -121,7 +121,7 @@ export default function HomeScreen() {
                             width: `${categoryPercent}%` as any,
                             backgroundColor: isOver ? colors.danger : colorSet.base,
                         }
-                    ]} />
+                    ]}/>
                 </View>
 
                 {/* Badge dépassement */}
@@ -136,7 +136,7 @@ export default function HomeScreen() {
     };
 
     return (
-        <View style={[styles.root, { paddingTop: insets.top }]}>
+        <View style={[styles.root, {paddingTop: insets.top}]}>
 
             {/* ── HEADER ── */}
             <View style={styles.header}>
@@ -167,50 +167,55 @@ export default function HomeScreen() {
                 // Parfait pour notre carte budget — elle scrolle avec la liste
                 ListHeaderComponent={
                     <View>
+                        <TouchableOpacity
+                            onPress={() => router.push('/edit-budget' as any)}
+                            activeOpacity={0.8}
+                        >
+                            {/* Carte budget global */}
+                            <View style={styles.budgetCard}>
+                                <Text style={styles.budgetLabel}>Budget du mois</Text>
+                                <Text style={styles.budgetAmount}>
+                                    {remaining} <Text style={styles.budgetCurrency}>€</Text>
+                                </Text>
+                                <Text style={styles.budgetSub}>
+                                    sur <Text style={styles.budgetRemaining}>{budget?.totalAmount ?? 0} €</Text> ce mois
+                                </Text>
 
-                        {/* Carte budget global */}
-                        <View style={styles.budgetCard}>
-                            <Text style={styles.budgetLabel}>Budget du mois</Text>
-                            <Text style={styles.budgetAmount}>
-                                {remaining} <Text style={styles.budgetCurrency}>€</Text>
-                            </Text>
-                            <Text style={styles.budgetSub}>
-                                sur <Text style={styles.budgetRemaining}>{budget?.totalAmount ?? 0} €</Text> ce mois
-                            </Text>
-
-                            {/* Barre de progression globale */}
-                            <View style={styles.progressWrap}>
-                                <View style={styles.progressHeader}>
-                                    <Text style={styles.progressLabel}>Dépensé</Text>
-                                    <Text style={styles.progressValue}>
-                                        {totalSpent} € / {budget?.totalAmount ?? 0} €
-                                    </Text>
+                                {/* Barre de progression globale */}
+                                <View style={styles.progressWrap}>
+                                    <View style={styles.progressHeader}>
+                                        <Text style={styles.progressLabel}>Dépensé</Text>
+                                        <Text style={styles.progressValue}>
+                                            {totalSpent.toFixed(2)} € / {budget?.totalAmount ?? 0} €
+                                        </Text>
+                                    </View>
+                                    <View style={styles.progressTrack}>
+                                        <View style={[
+                                            styles.progressFill,
+                                            {
+                                                width: `${progressPercent}%` as any,
+                                                backgroundColor: progressColor,
+                                            }
+                                        ]}/>
+                                    </View>
                                 </View>
-                                <View style={styles.progressTrack}>
-                                    <View style={[
-                                        styles.progressFill,
-                                        {
-                                            width: `${progressPercent}%` as any,
-                                            backgroundColor: progressColor,
-                                        }
-                                    ]} />
+
+                                {/* Stats dépensé / restant */}
+                                <View style={styles.statsRow}>
+                                    <View style={styles.statBox}>
+                                        <Text style={styles.statLabel}>Dépensé</Text>
+                                        <Text style={styles.statValue}>{totalSpent} €</Text>
+                                    </View>
+                                    <View style={styles.statBox}>
+                                        <Text style={styles.statLabel}>Restant</Text>
+                                        <Text style={[styles.statValue, {color: colors.accent}]}>
+                                            {remaining} €
+                                        </Text>
+                                    </View>
                                 </View>
                             </View>
+                        </TouchableOpacity>
 
-                            {/* Stats dépensé / restant */}
-                            <View style={styles.statsRow}>
-                                <View style={styles.statBox}>
-                                    <Text style={styles.statLabel}>Dépensé</Text>
-                                    <Text style={styles.statValue}>{totalSpent} €</Text>
-                                </View>
-                                <View style={styles.statBox}>
-                                    <Text style={styles.statLabel}>Restant</Text>
-                                    <Text style={[styles.statValue, { color: colors.accent }]}>
-                                        {remaining} €
-                                    </Text>
-                                </View>
-                            </View>
-                        </View>
 
                         {/* Titre section catégories */}
                         <Text style={styles.sectionTitle}>Catégories</Text>

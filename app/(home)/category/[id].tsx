@@ -152,7 +152,7 @@ export default function CategoryDetail() {
                                     <View style={styles.amountItem}>
                                         <Text style={styles.amountLabel}>Dépensé</Text>
                                         <Text style={[styles.amountValue, {color: colors.danger}]}>
-                                            {totalSpent} €
+                                            {totalSpent.toFixed(2)} €
                                         </Text>
                                     </View>
                                     <View style={styles.amountDivider}/>

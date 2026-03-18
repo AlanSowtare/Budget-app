@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize } from '../../constants/theme';
+import { colors, spacing, radius, fontSize } from '@/constants/theme';
 
 export const styles = StyleSheet.create({
 
@@ -268,4 +268,12 @@ export const styles = StyleSheet.create({
         color: colors.textMuted,
     },
 
+    editHint: {
+        fontFamily: 'DMSans-Regular',
+        fontSize: fontSize.xs,
+        color: colors.textMuted,
+        textAlign: 'center',
+        marginTop: spacing.md,
+        opacity: 0.6,
+    },
 });

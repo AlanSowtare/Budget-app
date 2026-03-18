@@ -14,6 +14,7 @@ interface BudgetStore {
     addExpense: (budgetId: string, expense: Omit<Expense, 'id' | 'date'>) => void;
     deleteExpense: (budgetId: string, expenseId: string) => void;
     deleteCategory: (budgetId: string, categoryId: string) => void;
+    updateBudgetAmount: (budgetId: string, totalAmount: number) => void;
 }
 
 const generateId = () => Math.random().toString(36).slice(2);
@@ -123,6 +124,19 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
                         expenses: b.expenses.filter(e => e.categoryId !== categoryId),
                     }
                     : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return { budgets: updatedBudgets };
+        });
+    },
+
+    updateBudgetAmount: (budgetId, totalAmount) => {
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId ? { ...b, totalAmount } : b
             );
 
             const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
