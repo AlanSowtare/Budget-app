@@ -61,6 +61,16 @@ export default function SubscriptionsScreen() {
 
             <View style={styles.actionsRow}>
                 <TouchableOpacity
+                    style={[styles.actionBtn, styles.editBtn]}
+                    onPress={() => router.push({
+                        pathname: '/add-subscription' as any,
+                        params: {subscriptionId: item.id},
+                    })}
+                >
+                    <Text style={styles.actionText}>Modifier</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
                     style={[styles.actionBtn, item.isActive ? styles.pauseBtn : styles.activateBtn]}
                     onPress={() => budget && toggleSubscription(budget.id, item.id)}
                 >
@@ -119,4 +129,3 @@ export default function SubscriptionsScreen() {
         </View>
     );
 }
-

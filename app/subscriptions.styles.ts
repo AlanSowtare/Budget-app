@@ -108,14 +108,20 @@ export const styles = StyleSheet.create({
     actionsRow: {
         flexDirection: 'row',
         gap: spacing.sm,
+        flexWrap: 'wrap',
     },
     actionBtn: {
         flex: 1,
+        minWidth: 96,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: radius.md,
         paddingVertical: spacing.sm,
         borderWidth: 1,
+    },
+    editBtn: {
+        backgroundColor: colors.surface2,
+        borderColor: colors.border,
     },
     pauseBtn: {
         backgroundColor: colors.surface2,
@@ -171,4 +177,3 @@ export const styles = StyleSheet.create({
         color: '#0d2e22',
     },
 });
-

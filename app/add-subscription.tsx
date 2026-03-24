@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
     View,
     Text,
@@ -8,7 +8,7 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
-import {useRouter} from 'expo-router';
+import {useLocalSearchParams, useRouter} from 'expo-router';
 import {useBudgetStore} from '@/store/budgetStore';
 import {colors} from '@/constants/theme';
 import {styles} from './add-subscription.styles';
@@ -16,30 +16,43 @@ import StepperInput from '@/components/StepperInput';
 
 export default function AddSubscription() {
     const router = useRouter();
+    const {subscriptionId} = useLocalSearchParams<{ subscriptionId?: string }>();
 
     const addSubscription = useBudgetStore(state => state.addSubscription);
+    const updateSubscription = useBudgetStore(state => state.updateSubscription);
     const getActiveBudget = useBudgetStore(state => state.getActiveBudget);
 
-    const [label, setLabel] = useState('');
-    const [amount, setAmount] = useState('');
-    const [dayOfMonth, setDayOfMonth] = useState(5);
+    const budget = getActiveBudget();
+    const existingSubscription = useMemo(
+        () => budget?.subscriptions.find(subscription => subscription.id === subscriptionId) ?? null,
+        [budget, subscriptionId]
+    );
+
+    const isEditMode = Boolean(existingSubscription);
+
+    const [label, setLabel] = useState(existingSubscription?.label ?? '');
+    const [amount, setAmount] = useState(existingSubscription ? String(existingSubscription.amount) : '');
+    const [dayOfMonth, setDayOfMonth] = useState(existingSubscription?.dayOfMonth ?? 5);
 
     const isValid = () => {
         const amountNum = parseFloat(amount.replace(',', '.'));
         return label.trim().length > 0 && !isNaN(amountNum) && amountNum > 0;
     };
 
-    const handleCreate = () => {
-        if (!isValid()) return;
+    const handleSubmit = () => {
+        if (!isValid() || !budget) return;
 
-        const budget = getActiveBudget();
-        if (!budget) return;
-
-        addSubscription(budget.id, {
+        const payload = {
             label: label.trim(),
             amount: parseFloat(amount.replace(',', '.')),
             dayOfMonth,
-        });
+        };
+
+        if (isEditMode && existingSubscription) {
+            updateSubscription(budget.id, existingSubscription.id, payload);
+        } else {
+            addSubscription(budget.id, payload);
+        }
 
         router.back();
     };
@@ -55,9 +68,11 @@ export default function AddSubscription() {
                 contentContainerStyle={styles.scroll}
                 keyboardShouldPersistTaps="handled"
             >
-                <Text style={styles.title}>Nouvel abonnement</Text>
+                <Text style={styles.title}>{isEditMode ? 'Modifier l’abonnement' : 'Nouvel abonnement'}</Text>
                 <Text style={styles.subtitle}>
-                    Ajoute un prélèvement récurrent pour mieux anticiper ton budget mensuel.
+                    {isEditMode
+                        ? 'Ajuste le montant, le libellé ou le jour de prélèvement quand ton abonnement change.'
+                        : 'Ajoute un prélèvement récurrent pour mieux anticiper ton budget mensuel.'}
                 </Text>
 
                 <View style={styles.field}>
@@ -71,7 +86,7 @@ export default function AddSubscription() {
                             keyboardType="decimal-pad"
                             value={amount}
                             onChangeText={setAmount}
-                            autoFocus
+                            autoFocus={!isEditMode}
                         />
                     </View>
                 </View>
@@ -105,13 +120,14 @@ export default function AddSubscription() {
 
                 <TouchableOpacity
                     style={[styles.button, !isValid() && styles.buttonDisabled]}
-                    onPress={handleCreate}
+                    onPress={handleSubmit}
                     disabled={!isValid()}
                 >
-                    <Text style={styles.buttonText}>Ajouter l’abonnement</Text>
+                    <Text style={styles.buttonText}>
+                        {isEditMode ? 'Enregistrer les modifications' : 'Ajouter l’abonnement'}
+                    </Text>
                 </TouchableOpacity>
             </ScrollView>
         </KeyboardAvoidingView>
     );
 }
-

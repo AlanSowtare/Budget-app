@@ -11,8 +11,8 @@ import {
     Gesture,
     GestureDetector,
 } from 'react-native-gesture-handler';
-import { Expense } from '../domain/entities/Budget';
-import { colors, spacing, radius, fontSize } from '../constants/theme';
+import { Expense } from '@/domain/entities/Budget';
+import { colors, spacing, radius, fontSize } from '@/constants/theme';
 
 interface Props {
     item: Expense;

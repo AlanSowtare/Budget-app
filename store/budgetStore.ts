@@ -16,6 +16,7 @@ interface BudgetStore {
     deleteCategory: (budgetId: string, categoryId: string) => void;
     updateBudgetAmount: (budgetId: string, totalAmount: number) => void;
     addSubscription: (budgetId: string, subscription: Omit<Subscription, 'id' | 'createdAt' | 'isActive'>) => void;
+    updateSubscription: (budgetId: string, subscriptionId: string, patch: Pick<Subscription, 'label' | 'amount' | 'dayOfMonth'>) => void;
     deleteSubscription: (budgetId: string, subscriptionId: string) => void;
     toggleSubscription: (budgetId: string, subscriptionId: string) => void;
     getMonthlySubscriptionsTotal: (budgetId: string) => number;
@@ -191,6 +192,32 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
                                 createdAt: new Date().toISOString(),
                             },
                         ],
+                    }
+                    : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return {budgets: updatedBudgets};
+        });
+    },
+
+    updateSubscription: (budgetId, subscriptionId, patch) => {
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
+                    ? {
+                        ...b,
+                        subscriptions: (b.subscriptions ?? []).map(subscription =>
+                            subscription.id === subscriptionId
+                                ? {
+                                    ...subscription,
+                                    ...patch,
+                                    label: patch.label.trim(),
+                                }
+                                : subscription
+                        ),
                     }
                     : b
             );
