@@ -21,14 +21,30 @@ export const styles = StyleSheet.create({
     },
 
     scroll: {
-        padding: spacing.lg,
-        gap: spacing.lg,
+        padding: spacing.xl,
+        gap: spacing.xl,
     },
 
     title: {
         fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.xxl,
         color: colors.text,
+    },
+    subtitle: {
+        fontFamily: 'PlusJakartaSans-Regular',
+        fontSize: fontSize.md,
+        color: colors.textMuted,
+        lineHeight: 22,
+        marginTop: -spacing.md,
+    },
+
+    sectionCard: {
+        backgroundColor: colors.surface,
+        borderRadius: radius.xl,
+        padding: spacing.lg,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.08)',
+        gap: spacing.lg,
     },
 
     field: {
@@ -50,7 +66,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.md,
     },
@@ -75,9 +91,17 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.md,
+    },
+
+    helperText: {
+        fontFamily: 'PlusJakartaSans-Regular',
+        fontSize: fontSize.sm,
+        color: colors.textMuted,
+        lineHeight: 20,
+        marginTop: -spacing.xs,
     },
 
     emojiGrid: {
@@ -92,7 +116,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.sm,
         backgroundColor: colors.surface,
         borderWidth: 1.5,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -109,11 +133,13 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: colors.accent,
         borderRadius: radius.lg,
+        minHeight: 52,
         paddingVertical: spacing.sm,
         paddingHorizontal: spacing.lg,
         alignItems: 'center',
-        alignSelf: 'center',
+        alignSelf: 'stretch',
         marginTop: spacing.sm,
+        justifyContent: 'center',
     },
 
     buttonDisabled: {

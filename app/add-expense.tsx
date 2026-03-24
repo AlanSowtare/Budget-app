@@ -66,52 +66,58 @@ export default function AddExpense() {
                 keyboardShouldPersistTaps="handled"
             >
                 <Text style={styles.title}>Nouvelle dépense</Text>
+                <Text style={styles.subtitle}>
+                    Ajoute une dépense à cette catégorie pour garder une vision claire de ce qu’il te reste.
+                </Text>
 
-                {/* ── MONTANT ── */}
-                <View style={styles.field}>
-                    <Text style={styles.label}>Montant</Text>
-                    <View style={styles.amountDisplay}>
-                        <Text style={styles.currency}>€</Text>
-                        <TextInput
-                            style={styles.amountInput}
-                            placeholder="0"
-                            placeholderTextColor={colors.textMuted}
-                            keyboardType="decimal-pad"
-                            value={amount}
-                            onChangeText={setAmount}
-                            autoFocus
-                        />
+                <View style={styles.sectionCard}>
+                    {/* ── MONTANT ── */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Montant</Text>
+                        <View style={styles.amountDisplay}>
+                            <Text style={styles.currency}>€</Text>
+                            <TextInput
+                                style={styles.amountInput}
+                                placeholder="0"
+                                placeholderTextColor={colors.textMuted}
+                                keyboardType="decimal-pad"
+                                value={amount}
+                                onChangeText={setAmount}
+                                autoFocus
+                            />
+                        </View>
                     </View>
-                </View>
 
-                {/* ── LIBELLÉ ── */}
-                <View style={styles.field}>
-                    <Text style={styles.label}>Libellé</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ex : Courses Monoprix"
-                        placeholderTextColor={colors.textMuted}
-                        value={label}
-                        onChangeText={setLabel}
-                    />
-                </View>
+                    {/* ── LIBELLÉ ── */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Libellé</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ex : Courses Monoprix"
+                            placeholderTextColor={colors.textMuted}
+                            value={label}
+                            onChangeText={setLabel}
+                        />
+                        <Text style={styles.helperText}>Choisis un nom simple pour retrouver facilement cette dépense plus tard.</Text>
+                    </View>
 
-                {/* ── EMOJI ── */}
-                <View style={styles.field}>
-                    <Text style={styles.label}>Icône</Text>
-                    <View style={styles.emojiGrid}>
-                        {EMOJIS.map(emoji => (
-                            <TouchableOpacity
-                                key={emoji}
-                                style={[
-                                    styles.emojiBtn,
-                                    selectedEmoji === emoji && styles.emojiBtnSelected,
-                                ]}
-                                onPress={() => setSelectedEmoji(emoji)}
-                            >
-                                <Text style={styles.emojiText}>{emoji}</Text>
-                            </TouchableOpacity>
-                        ))}
+                    {/* ── EMOJI ── */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Icône</Text>
+                        <View style={styles.emojiGrid}>
+                            {EMOJIS.map(emoji => (
+                                <TouchableOpacity
+                                    key={emoji}
+                                    style={[
+                                        styles.emojiBtn,
+                                        selectedEmoji === emoji && styles.emojiBtnSelected,
+                                    ]}
+                                    onPress={() => setSelectedEmoji(emoji)}
+                                >
+                                    <Text style={styles.emojiText}>{emoji}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     </View>
                 </View>
 

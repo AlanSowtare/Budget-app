@@ -18,8 +18,8 @@ export const styles = StyleSheet.create({
         marginBottom: spacing.sm,
     },
     scroll: {
-        padding: spacing.lg,
-        gap: spacing.lg,
+        padding: spacing.xl,
+        gap: spacing.xl,
     },
     title: {
         fontFamily: 'PlusJakartaSans-ExtraBold',
@@ -31,7 +31,15 @@ export const styles = StyleSheet.create({
         fontSize: fontSize.md,
         color: colors.textMuted,
         lineHeight: 22,
-        marginTop: spacing.xs,
+        marginTop: -spacing.md,
+    },
+    sectionCard: {
+        backgroundColor: colors.surface,
+        borderRadius: radius.xl,
+        padding: spacing.lg,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.08)',
+        gap: spacing.lg,
     },
     field: {
         gap: spacing.xs,
@@ -49,7 +57,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.md,
     },
@@ -73,16 +81,16 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.md,
     },
     tipCard: {
         backgroundColor: colors.surface,
-        borderRadius: radius.lg,
+        borderRadius: radius.xl,
         borderWidth: 1,
-        borderColor: colors.border,
-        padding: spacing.md,
+        borderColor: 'rgba(255,255,255,0.08)',
+        padding: spacing.lg,
         gap: spacing.xs,
     },
     tipTitle: {
@@ -99,11 +107,13 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: colors.accent,
         borderRadius: radius.lg,
+        minHeight: 52,
         paddingVertical: spacing.sm,
         paddingHorizontal: spacing.lg,
         alignItems: 'center',
-        alignSelf: 'center',
+        alignSelf: 'stretch',
         marginTop: spacing.sm,
+        justifyContent: 'center',
     },
     buttonDisabled: {
         opacity: 0.4,
@@ -114,4 +124,3 @@ export const styles = StyleSheet.create({
         color: '#0d2e22',
     },
 });
-

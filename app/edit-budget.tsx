@@ -49,9 +49,9 @@ export default function EditBudget() {
                     {MONTHS[(budget?.month ?? 1) - 1]} {budget?.year}
                 </Text>
 
-                {/* Montant actuel en petit */}
                 <Text style={styles.currentLabel}>
                     Budget actuel : {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
+                    {'\n'}Ajuste cette enveloppe si tes revenus ou tes priorités changent ce mois-ci.
                 </Text>
 
                 {/* Champ montant */}

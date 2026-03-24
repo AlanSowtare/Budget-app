@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize } from '../constants/theme';
+import { colors, spacing, radius, fontSize } from '@/constants/theme';
 
 export const styles = StyleSheet.create({
 
@@ -21,15 +21,31 @@ export const styles = StyleSheet.create({
     },
 
     scroll: {
-        padding: spacing.lg,
-        gap: spacing.lg,
+        padding: spacing.xl,
+        gap: spacing.xl,
     },
 
     title: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.xxl,
         color: colors.text,
         marginBottom: spacing.sm,
+    },
+    subtitle: {
+        fontFamily: 'PlusJakartaSans-Regular',
+        fontSize: fontSize.md,
+        color: colors.textMuted,
+        lineHeight: 22,
+        marginTop: -spacing.md,
+    },
+
+    sectionCard: {
+        backgroundColor: colors.surface,
+        borderRadius: radius.xl,
+        padding: spacing.lg,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.08)',
+        gap: spacing.lg,
     },
 
     field: {
@@ -37,7 +53,7 @@ export const styles = StyleSheet.create({
     },
 
     label: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -46,13 +62,13 @@ export const styles = StyleSheet.create({
 
     input: {
         flex: 1,
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.lg,
         color: colors.text,
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.md,
     },
@@ -63,15 +79,23 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         paddingHorizontal: spacing.md,
     },
 
     currency: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.xl,
         color: colors.textMuted,
         marginRight: spacing.sm,
+    },
+
+    helperText: {
+        fontFamily: 'PlusJakartaSans-Regular',
+        fontSize: fontSize.sm,
+        color: colors.textMuted,
+        lineHeight: 20,
+        marginTop: -spacing.xs,
     },
 
     // Grille emoji — 8 par ligne
@@ -87,7 +111,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.sm,
         backgroundColor: colors.surface,
         borderWidth: 1.5,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -122,18 +146,20 @@ export const styles = StyleSheet.create({
 
     colorCheck: {
         color: colors.text,
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: fontSize.sm,
     },
 
     button: {
         backgroundColor: colors.accent,
         borderRadius: radius.lg,
+        minHeight: 52,
         paddingVertical: spacing.sm,
         paddingHorizontal: spacing.lg,
         alignItems: 'center',
-        alignSelf: 'center',
+        alignSelf: 'stretch',
         marginTop: spacing.sm,
+        justifyContent: 'center',
     },
 
     buttonDisabled: {
@@ -141,7 +167,7 @@ export const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.lg,
         color: '#0d2e22',
     },

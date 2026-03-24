@@ -43,9 +43,21 @@ export const styles = StyleSheet.create({
         margin: spacing.md,
         backgroundColor: colors.surface,
         borderRadius: radius.xl,
-        padding: spacing.lg,
+        padding: spacing.xl,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.22,
+        shadowRadius: 20,
+        elevation: 8,
+    },
+    budgetTopRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: spacing.sm,
+        marginBottom: spacing.sm,
     },
     budgetLabel: {
         fontFamily: 'PlusJakartaSans-Medium',
@@ -64,14 +76,27 @@ export const styles = StyleSheet.create({
     },
     budgetCurrency: {
         fontFamily: 'PlusJakartaSans-Bold',
-        fontSize: 22,
-        color: colors.textMuted,
+        fontSize: 20,
+        color: colors.textSoft,
     },
     budgetSub: {
         fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.md,
         color: colors.textMuted,
-        marginBottom: spacing.lg,
+        marginBottom: spacing.xl,
+        lineHeight: 24,
+    },
+    statusBadge: {
+        paddingHorizontal: 10,
+        paddingVertical: 7,
+        borderRadius: radius.full,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    statusBadgeText: {
+        fontFamily: 'PlusJakartaSans-Medium',
+        fontSize: fontSize.xs,
+        letterSpacing: 0.2,
     },
     budgetRemaining: {
         color: colors.accent,
@@ -80,7 +105,7 @@ export const styles = StyleSheet.create({
 
     // ── PROGRESS ──
     progressWrap: {
-        marginBottom: spacing.md,
+        marginBottom: spacing.lg,
     },
     progressHeader: {
         flexDirection: 'row',
@@ -116,11 +141,11 @@ export const styles = StyleSheet.create({
     },
     statBox: {
         flex: 1,
-        backgroundColor: colors.surface2,
-        borderRadius: radius.md,
-        padding: spacing.sm,
+        backgroundColor: '#202535',
+        borderRadius: radius.lg,
+        padding: spacing.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.05)',
     },
     statLabel: {
         fontFamily: 'PlusJakartaSans-Regular',
@@ -137,6 +162,9 @@ export const styles = StyleSheet.create({
     },
     statValueDanger: {
         color: colors.danger,
+    },
+    statValueEmphasis: {
+        fontFamily: 'PlusJakartaSans-ExtraBold',
     },
 
     // ── SECTION TITLE ──
@@ -162,44 +190,52 @@ export const styles = StyleSheet.create({
     catTile: {
         flex: 1,
         backgroundColor: colors.surface,
-        borderRadius: radius.lg,
+        borderRadius: radius.xl,
         padding: spacing.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.06)',
         overflow: 'hidden',
-        gap: 3,
+        gap: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.14,
+        shadowRadius: 16,
+        elevation: 5,
     },
     catTileBorder: {
         position: 'absolute',
         top: 0, left: 0, right: 0,
-        height: 2,
+        height: 3,
+        opacity: 0.95,
     },
     catIcon: {
-        width: 38,
-        height: 38,
-        borderRadius: radius.sm,
+        width: 42,
+        height: 42,
+        borderRadius: radius.md,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: spacing.xs,
+        marginBottom: spacing.sm,
     },
     catEmoji: {
-        fontSize: 18,
+        fontSize: 19,
     },
     catName: {
         fontFamily: 'PlusJakartaSans-Bold',
         fontSize: fontSize.md,
         color: colors.text,
+        lineHeight: 20,
     },
     catCount: {
         fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.xs,
         color: colors.textMuted,
-        marginBottom: spacing.xs,
+        marginBottom: spacing.sm,
     },
     catSpent: {
         fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.xl,
         color: colors.text,
+        letterSpacing: -0.2,
     },
     catSpentOver: {
         color: colors.danger,
@@ -208,11 +244,12 @@ export const styles = StyleSheet.create({
         fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.xs,
         color: colors.textMuted,
-        marginBottom: spacing.xs,
+        marginBottom: spacing.sm,
+        lineHeight: 18,
     },
     catProgressTrack: {
-        height: 3,
-        backgroundColor: colors.surface3,
+        height: 4,
+        backgroundColor: '#232838',
         borderRadius: radius.full,
         overflow: 'hidden',
         marginTop: spacing.xs,
@@ -222,17 +259,18 @@ export const styles = StyleSheet.create({
         borderRadius: radius.full,
     },
     overBadge: {
-        marginTop: spacing.xs,
+        marginTop: spacing.sm,
         backgroundColor: colors.dangerDim,
         borderRadius: radius.full,
-        paddingHorizontal: spacing.sm,
-        paddingVertical: 2,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
         alignSelf: 'flex-start',
     },
     overBadgeText: {
         fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.xs,
         color: colors.danger,
+        letterSpacing: 0.2,
     },
 
     // ── EMPTY STATE ──

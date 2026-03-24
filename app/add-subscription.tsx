@@ -75,41 +75,43 @@ export default function AddSubscription() {
                         : 'Ajoute un prélèvement récurrent pour mieux anticiper ton budget mensuel.'}
                 </Text>
 
-                <View style={styles.field}>
-                    <Text style={styles.label}>Montant mensuel</Text>
-                    <View style={styles.amountDisplay}>
-                        <Text style={styles.currency}>€</Text>
+                <View style={styles.sectionCard}>
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Montant mensuel</Text>
+                        <View style={styles.amountDisplay}>
+                            <Text style={styles.currency}>€</Text>
+                            <TextInput
+                                style={styles.amountInput}
+                                placeholder="0"
+                                placeholderTextColor={colors.textMuted}
+                                keyboardType="decimal-pad"
+                                value={amount}
+                                onChangeText={setAmount}
+                                autoFocus={!isEditMode}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Libellé</Text>
                         <TextInput
-                            style={styles.amountInput}
-                            placeholder="0"
+                            style={styles.input}
+                            placeholder="Ex : Netflix, Loyer, Salle de sport"
                             placeholderTextColor={colors.textMuted}
-                            keyboardType="decimal-pad"
-                            value={amount}
-                            onChangeText={setAmount}
-                            autoFocus={!isEditMode}
+                            value={label}
+                            onChangeText={setLabel}
                         />
                     </View>
-                </View>
 
-                <View style={styles.field}>
-                    <Text style={styles.label}>Libellé</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ex : Netflix, Loyer, Salle de sport"
-                        placeholderTextColor={colors.textMuted}
-                        value={label}
-                        onChangeText={setLabel}
+                    <StepperInput
+                        label="Date de prélèvement"
+                        value={dayOfMonth}
+                        min={1}
+                        max={31}
+                        onChange={setDayOfMonth}
+                        displayValue={`Le ${dayOfMonth}`}
                     />
                 </View>
-
-                <StepperInput
-                    label="Date de prélèvement"
-                    value={dayOfMonth}
-                    min={1}
-                    max={31}
-                    onChange={setDayOfMonth}
-                    displayValue={`Le ${dayOfMonth}`}
-                />
 
                 <View style={styles.tipCard}>
                     <Text style={styles.tipTitle}>Bon à savoir</Text>

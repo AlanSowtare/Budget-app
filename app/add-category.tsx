@@ -9,9 +9,9 @@ import {
     Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useBudgetStore } from '../store/budgetStore';
+import { useBudgetStore } from '@/store/budgetStore';
+import { colors } from '@/constants/theme';
 import { styles } from './add-category.styles';
-import { colors } from '../constants/theme';
 
 // Les couleurs disponibles pour une catégorie
 const COLORS: { key: string; base: string }[] = [
@@ -73,75 +73,80 @@ export default function AddCategory() {
                 keyboardShouldPersistTaps="handled"
             >
                 <Text style={styles.title}>Nouvelle catégorie</Text>
+                <Text style={styles.subtitle}>
+                    Crée une enveloppe claire pour piloter ton budget plus facilement tout au long du mois.
+                </Text>
 
-                {/* ── NOM ── */}
-                <View style={styles.field}>
-                    <Text style={styles.label}>Nom</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ex : Alimentation"
-                        placeholderTextColor={colors.textMuted}
-                        value={name}
-                        onChangeText={setName}
-                        autoFocus // focus automatique à l'ouverture du modal
-                    />
-                </View>
-
-                {/* ── MONTANT ── */}
-                <View style={styles.field}>
-                    <Text style={styles.label}>Budget alloué</Text>
-                    <View style={styles.inputRow}>
-                        <Text style={styles.currency}>€</Text>
+                <View style={styles.sectionCard}>
+                    {/* ── NOM ── */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Nom</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder="500"
+                            placeholder="Ex : Alimentation"
                             placeholderTextColor={colors.textMuted}
-                            keyboardType="decimal-pad"
-                            value={amount}
-                            onChangeText={setAmount}
+                            value={name}
+                            onChangeText={setName}
+                            autoFocus
                         />
                     </View>
-                </View>
 
-                {/* ── EMOJI ── */}
-                <View style={styles.field}>
-                    <Text style={styles.label}>Icône</Text>
-                    <View style={styles.emojiGrid}>
-                        {EMOJIS.map(emoji => (
-                            <TouchableOpacity
-                                key={emoji}
-                                style={[
-                                    styles.emojiBtn,
-                                    selectedEmoji === emoji && styles.emojiBtnSelected,
-                                ]}
-                                onPress={() => setSelectedEmoji(emoji)}
-                            >
-                                <Text style={styles.emojiText}>{emoji}</Text>
-                            </TouchableOpacity>
-                        ))}
+                    {/* ── MONTANT ── */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Budget alloué</Text>
+                        <View style={styles.inputRow}>
+                            <Text style={styles.currency}>€</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="500"
+                                placeholderTextColor={colors.textMuted}
+                                keyboardType="decimal-pad"
+                                value={amount}
+                                onChangeText={setAmount}
+                            />
+                        </View>
+                        <Text style={styles.helperText}>Définis un montant réaliste pour suivre cette catégorie sans te surcharger.</Text>
                     </View>
-                </View>
 
-                {/* ── COULEUR ── */}
-                <View style={styles.field}>
-                    <Text style={styles.label}>Couleur</Text>
-                    <View style={styles.colorRow}>
-                        {COLORS.map(color => (
-                            <TouchableOpacity
-                                key={color.key}
-                                style={[
-                                    styles.colorBtn,
-                                    { backgroundColor: color.base },
-                                    selectedColor === color.key && styles.colorBtnSelected,
-                                ]}
-                                onPress={() => setSelectedColor(color.key)}
-                            >
-                                {/* Coche si sélectionné */}
-                                {selectedColor === color.key && (
-                                    <Text style={styles.colorCheck}>✓</Text>
-                                )}
-                            </TouchableOpacity>
-                        ))}
+                    {/* ── EMOJI ── */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Icône</Text>
+                        <View style={styles.emojiGrid}>
+                            {EMOJIS.map(emoji => (
+                                <TouchableOpacity
+                                    key={emoji}
+                                    style={[
+                                        styles.emojiBtn,
+                                        selectedEmoji === emoji && styles.emojiBtnSelected,
+                                    ]}
+                                    onPress={() => setSelectedEmoji(emoji)}
+                                >
+                                    <Text style={styles.emojiText}>{emoji}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+
+                    {/* ── COULEUR ── */}
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Couleur</Text>
+                        <View style={styles.colorRow}>
+                            {COLORS.map(color => (
+                                <TouchableOpacity
+                                    key={color.key}
+                                    style={[
+                                        styles.colorBtn,
+                                        { backgroundColor: color.base },
+                                        selectedColor === color.key && styles.colorBtnSelected,
+                                    ]}
+                                    onPress={() => setSelectedColor(color.key)}
+                                >
+                                    {selectedColor === color.key && (
+                                        <Text style={styles.colorCheck}>✓</Text>
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     </View>
                 </View>
 

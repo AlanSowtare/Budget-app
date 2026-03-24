@@ -21,8 +21,8 @@ export const styles = StyleSheet.create({
     },
 
     content: {
-        padding: spacing.lg,
-        gap: spacing.lg,
+        padding: spacing.xl,
+        gap: spacing.xl,
     },
 
     title: {
@@ -35,7 +35,8 @@ export const styles = StyleSheet.create({
         fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.md,
         color: colors.textMuted,
-        marginTop: -spacing.sm,
+        lineHeight: 22,
+        marginTop: -spacing.md,
     },
 
     currentLabel: {
@@ -43,10 +44,10 @@ export const styles = StyleSheet.create({
         fontSize: fontSize.sm,
         color: colors.textMuted,
         backgroundColor: colors.surface,
-        borderRadius: radius.md,
-        padding: spacing.md,
+        borderRadius: radius.xl,
+        padding: spacing.lg,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
     },
 
     field: {
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,255,255,0.08)',
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.md,
     },
@@ -90,11 +91,13 @@ export const styles = StyleSheet.create({
     button: {
         backgroundColor: colors.accent,
         borderRadius: radius.lg,
+        minHeight: 52,
         paddingVertical: spacing.sm,
         paddingHorizontal: spacing.lg,
         alignItems: 'center',
-        alignSelf: 'center',
+        alignSelf: 'stretch',
         marginTop: spacing.sm,
+        justifyContent: 'center',
     },
 
     buttonDisabled: {

@@ -65,8 +65,8 @@ export default function HomeScreen() {
     const estimatedAvailable = currentAvailable - upcomingSubscriptions;
     const hasUpcomingSubscriptions = upcomingSubscriptions > 0;
     const estimatedSubtitle = hasUpcomingSubscriptions
-        ? `${formatCurrency(estimatedAvailable, {compact: true})} après charges à venir`
-        : 'Aucune charge récurrente restante ce mois';
+        ? `Après abonnements restants : ${formatCurrency(estimatedAvailable, {compact: true})}`
+        : 'Aucun abonnement restant à prévoir ce mois';
 
     const subscriptionsHelperText = nextSubscriptionDay && hasUpcomingSubscriptions
         ? `Prochain prélèvement le ${nextSubscriptionDay} · ${formatCurrency(monthlySubscriptions, {compact: true})} au total ce mois`
@@ -83,6 +83,24 @@ export default function HomeScreen() {
         : progressPercent <= 30
             ? colors.warning
             : colors.accent;
+
+    const budgetHealth = estimatedAvailable < 0
+        ? {
+            label: 'Tendu',
+            color: colors.danger,
+            backgroundColor: colors.dangerDim,
+        }
+        : progressPercent <= 30
+            ? {
+                label: 'À surveiller',
+                color: colors.warning,
+                backgroundColor: colors.orangeDim,
+            }
+            : {
+                label: 'Sain',
+                color: colors.accent,
+                backgroundColor: colors.accentDim,
+            };
 
     const handleLongPressCategory = (item: Category) => {
         Alert.alert(
@@ -201,7 +219,17 @@ export default function HomeScreen() {
                         >
                             {/* Carte budget global */}
                             <View style={styles.budgetCard}>
-                                <Text style={styles.budgetLabel}>Disponible actuel</Text>
+                                <View style={styles.budgetTopRow}>
+                                    <Text style={styles.budgetLabel}>Disponible maintenant</Text>
+                                    <View
+                                        style={[
+                                            styles.statusBadge,
+                                            {backgroundColor: budgetHealth.backgroundColor},
+                                        ]}
+                                    >
+                                        <Text style={[styles.statusBadgeText, {color: budgetHealth.color}]}>● {budgetHealth.label}</Text>
+                                    </View>
+                                </View>
                                 <Text style={styles.budgetAmount}>
                                     {formatCurrency(currentAvailable, {compact: true, showCurrency: false})} <Text style={styles.budgetCurrency}>€</Text>
                                 </Text>
@@ -212,7 +240,7 @@ export default function HomeScreen() {
                                 {/* Barre de progression globale */}
                                 <View style={styles.progressWrap}>
                                     <View style={styles.progressHeader}>
-                                        <Text style={styles.progressLabel}>Budget consommé</Text>
+                                        <Text style={styles.progressLabel}>Conso du mois</Text>
                                         <Text style={styles.progressValue}>
                                             {formatCurrency(totalSpent, {compact: true})} / {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
                                         </Text>
@@ -235,20 +263,21 @@ export default function HomeScreen() {
                                         <Text
                                             style={[
                                                 styles.statValue,
-                                                estimatedAvailable < 0 && styles.statValueDanger,
+                                                styles.statValueEmphasis,
+                                                {color: budgetHealth.color},
                                             ]}
                                         >
                                             {formatCurrency(estimatedAvailable, {compact: true})}
                                         </Text>
                                     </View>
                                     <View style={styles.statBox}>
-                                        <Text style={styles.statLabel}>Budget total</Text>
+                                        <Text style={styles.statLabel}>Budget du mois</Text>
                                         <Text style={styles.statValue}>{formatCurrency(budget?.totalAmount ?? 0, {compact: true})}</Text>
                                     </View>
                                 </View>
 
                                 <Text style={styles.editHint}>
-                                    Appuie pour modifier ton budget du mois
+                                    Appuie pour ajuster ton budget mensuel
                                 </Text>
                             </View>
                         </TouchableOpacity>
