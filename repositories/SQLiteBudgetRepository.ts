@@ -4,6 +4,11 @@ import {Budget} from "@/domain/entities/Budget";
 
 const db = SQLite.openDatabaseSync('budget.db');
 
+const normalizeBudget = (budget: Budget): Budget => ({
+    ...budget,
+    subscriptions: budget.subscriptions ?? [],
+});
+
 export class SQLiteBudgetRepository implements IBudgetRepository {
     constructor() {
         this.init();
@@ -22,16 +27,13 @@ export class SQLiteBudgetRepository implements IBudgetRepository {
         const rows = db.getAllSync<{ id: string; data: string }>(
             'SELECT * FROM budgets'
         );
-        // Chaque row.data est un JSON — on le parse pour récupérer l'objet Budget
-        return rows.map(row => JSON.parse(row.data) as Budget);
+        return rows.map(row => normalizeBudget(JSON.parse(row.data) as Budget));
     }
 
     async save(budget: Budget): Promise<void> {
         db.runSync(
-            // INSERT OR REPLACE = insère si n'existe pas, remplace si existe déjà
             'INSERT OR REPLACE INTO budgets (id, data) VALUES (?, ?)',
-            [budget.id, JSON.stringify(budget)]
-            // JSON.stringify convertit l'objet en string pour le stocker
+            [budget.id, JSON.stringify(normalizeBudget(budget))]
         );
     }
 

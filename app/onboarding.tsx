@@ -5,12 +5,12 @@ import {
     TextInput,
     TouchableOpacity,
     ScrollView,
-    KeyboardAvoidingView, // monte le contenu quand le clavier apparaît
-    Platform,             // détecte si on est sur iOS ou Android
+    KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useBudgetStore } from '../store/budgetStore';
-import { colors, spacing, radius, fontSize } from '../constants/theme';
+import { colors } from '../constants/theme';
 import { styles } from './onboarding.styles';
 import StepperInput from "@/components/StepperInput";
 import {MONTHS} from "@/constants/months";

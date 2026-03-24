@@ -21,7 +21,7 @@ export default function Index() {
             // Budget existant → Home
             router.replace('/(home)' as any);
         }
-    }, [budgets]);
+    }, [budgets, router]);
 
     return (
         <View style={{

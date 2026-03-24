@@ -15,6 +15,15 @@ export interface Expense {
     date: string;
 }
 
+export interface Subscription {
+    id: string;
+    label: string;
+    amount: number;
+    dayOfMonth: number;
+    isActive: boolean;
+    createdAt: string;
+}
+
 export interface Budget {
     id: string;
     month: number;
@@ -22,4 +31,5 @@ export interface Budget {
     totalAmount: number;
     categories: Category[];
     expenses: Expense[];
+    subscriptions: Subscription[];
 }

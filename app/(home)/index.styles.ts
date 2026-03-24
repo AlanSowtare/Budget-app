@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
         fontFamily: 'Syne-ExtraBold',
         fontSize: fontSize.display,
         color: colors.text,
-        letterSpacing: -1,  // ← si cette valeur est trop négative, ça compresse
+        letterSpacing: -1,
         lineHeight: 48,
     },
     budgetCurrency: {
@@ -133,6 +133,9 @@ export const styles = StyleSheet.create({
         fontFamily: 'Syne-Bold',
         fontSize: fontSize.xl,
         color: colors.text,
+    },
+    statValueDanger: {
+        color: colors.danger,
     },
 
     // ── SECTION TITLE ──

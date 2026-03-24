@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, StyleSheet } from 'react-native';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -13,7 +13,6 @@ import {
 } from 'react-native-gesture-handler';
 import { Expense } from '../domain/entities/Budget';
 import { colors, spacing, radius, fontSize } from '../constants/theme';
-import { StyleSheet } from 'react-native';
 
 interface Props {
     item: Expense;

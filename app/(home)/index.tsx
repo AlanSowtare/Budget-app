@@ -4,12 +4,13 @@ import {
     Text,
     FlatList,
     TouchableOpacity,
-    Alert,  // respecte les encoches iPhone (notch, dynamic island)
+    Alert,
 } from 'react-native';
 import {useRouter} from 'expo-router';
 import {useBudgetStore} from '@/store/budgetStore';
 import {colors} from '@/constants/theme';
 import {styles} from './index.styles';
+import {subscriptionCardStyles} from './subscription-card.styles';
 import {Category} from '@/domain/entities/Budget';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {MONTHS} from "@/constants/months";
@@ -32,6 +33,9 @@ export default function HomeScreen() {
     const budget = budgets.find(b => b.id === activeBudgetId) ?? null;
 
     const deleteCategory = useBudgetStore(state => state.deleteCategory);
+    const getMonthlySubscriptionsTotal = useBudgetStore(state => state.getMonthlySubscriptionsTotal);
+    const getRemainingSubscriptionsTotal = useBudgetStore(state => state.getRemainingSubscriptionsTotal);
+    const getNextSubscriptionDay = useBudgetStore(state => state.getNextSubscriptionDay);
 
     const insets = useSafeAreaInsets();
 
@@ -44,10 +48,33 @@ export default function HomeScreen() {
         // expense = élément courant
     }, [budget]);
 
-    const remaining = (budget?.totalAmount ?? 0) - totalSpent;
+    const monthlySubscriptions = budget
+        ? getMonthlySubscriptionsTotal(budget.id)
+        : 0;
 
-    const progressPercent = budget
-        ? Math.max((remaining / budget.totalAmount) * 100, 0)
+    const upcomingSubscriptions = budget
+        ? getRemainingSubscriptionsTotal(budget.id)
+        : 0;
+
+    const nextSubscriptionDay = budget
+        ? getNextSubscriptionDay(budget.id)
+        : null;
+
+    const currentAvailable = (budget?.totalAmount ?? 0) - totalSpent;
+    const estimatedAvailable = currentAvailable - upcomingSubscriptions;
+    const hasUpcomingSubscriptions = upcomingSubscriptions > 0;
+    const estimatedSubtitle = hasUpcomingSubscriptions
+        ? `${estimatedAvailable.toFixed(2)} € après charges à venir`
+        : 'Aucune charge récurrente restante ce mois';
+
+    const subscriptionsHelperText = nextSubscriptionDay && hasUpcomingSubscriptions
+        ? `Prochain prélèvement le ${nextSubscriptionDay} · ${monthlySubscriptions.toFixed(2)} € au total ce mois`
+        : monthlySubscriptions > 0
+            ? `${monthlySubscriptions.toFixed(2)} € d’abonnements actifs ce mois`
+            : 'Aucun abonnement actif pour le moment';
+
+    const progressPercent = budget && budget.totalAmount > 0
+        ? Math.max((currentAvailable / budget.totalAmount) * 100, 0)
         : 100;
 
     const progressColor = progressPercent <= 10
@@ -173,18 +200,18 @@ export default function HomeScreen() {
                         >
                             {/* Carte budget global */}
                             <View style={styles.budgetCard}>
-                                <Text style={styles.budgetLabel}>Budget du mois</Text>
+                                <Text style={styles.budgetLabel}>Disponible actuel</Text>
                                 <Text style={styles.budgetAmount}>
-                                    {remaining} <Text style={styles.budgetCurrency}>€</Text>
+                                    {currentAvailable.toFixed(2)} <Text style={styles.budgetCurrency}>€</Text>
                                 </Text>
                                 <Text style={styles.budgetSub}>
-                                    sur <Text style={styles.budgetRemaining}>{budget?.totalAmount ?? 0} €</Text> ce mois
+                                    {estimatedSubtitle}
                                 </Text>
 
                                 {/* Barre de progression globale */}
                                 <View style={styles.progressWrap}>
                                     <View style={styles.progressHeader}>
-                                        <Text style={styles.progressLabel}>Dépensé</Text>
+                                        <Text style={styles.progressLabel}>Budget consommé</Text>
                                         <Text style={styles.progressValue}>
                                             {totalSpent.toFixed(2)} € / {budget?.totalAmount ?? 0} €
                                         </Text>
@@ -203,19 +230,57 @@ export default function HomeScreen() {
                                 {/* Stats dépensé / restant */}
                                 <View style={styles.statsRow}>
                                     <View style={styles.statBox}>
-                                        <Text style={styles.statLabel}>Dépensé</Text>
-                                        <Text style={styles.statValue}>{totalSpent} €</Text>
-                                    </View>
-                                    <View style={styles.statBox}>
-                                        <Text style={styles.statLabel}>Restant</Text>
-                                        <Text style={[styles.statValue, {color: colors.accent}]}>
-                                            {remaining} €
+                                        <Text style={styles.statLabel}>Disponible estimé</Text>
+                                        <Text
+                                            style={[
+                                                styles.statValue,
+                                                estimatedAvailable < 0 && styles.statValueDanger,
+                                            ]}
+                                        >
+                                            {estimatedAvailable.toFixed(2)} €
                                         </Text>
                                     </View>
+                                    <View style={styles.statBox}>
+                                        <Text style={styles.statLabel}>Budget total</Text>
+                                        <Text style={styles.statValue}>{(budget?.totalAmount ?? 0).toFixed(2)} €</Text>
+                                    </View>
                                 </View>
+
+                                <Text style={styles.editHint}>
+                                    Appuie pour modifier ton budget du mois
+                                </Text>
                             </View>
                         </TouchableOpacity>
 
+
+                        {/* ── ABONNEMENTS MENSUELS ── */}
+                        <TouchableOpacity
+                            style={subscriptionCardStyles.card}
+                            activeOpacity={0.88}
+                            onPress={() => router.push('/subscriptions' as any)}
+                        >
+                            <View style={subscriptionCardStyles.header}>
+                                <View>
+                                    <Text style={subscriptionCardStyles.eyebrow}>Abonnements</Text>
+                                    <Text style={subscriptionCardStyles.title}>Charges à venir</Text>
+                                </View>
+                                <Text style={subscriptionCardStyles.link}>Voir tout</Text>
+                            </View>
+
+                            <Text style={subscriptionCardStyles.highlightValue}>
+                                {upcomingSubscriptions.toFixed(2)} €
+                            </Text>
+                            <Text style={subscriptionCardStyles.helperText}>
+                                {subscriptionsHelperText}
+                            </Text>
+
+                            <TouchableOpacity
+                                style={subscriptionCardStyles.addBtn}
+                                onPress={() => router.push('/add-subscription' as any)}
+                            >
+                                <Text style={subscriptionCardStyles.addBtnText}>＋ Ajouter un abonnement</Text>
+                            </TouchableOpacity>
+                        </TouchableOpacity>
 
                         {/* Titre section catégories */}
                         <Text style={styles.sectionTitle}>Catégories</Text>

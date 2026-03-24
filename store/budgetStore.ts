@@ -1,13 +1,13 @@
 import {create} from 'zustand';
-import {Budget, Category, Expense} from '@/domain/entities/Budget';
+import {Budget, Category, Expense, Subscription} from '@/domain/entities/Budget';
 import {budgetRepository} from "@/repositories/SQLiteBudgetRepository";
 
 interface BudgetStore {
     budgets: Budget[];
     activeBudgetId: string | null;
-    isLoading: boolean; // nouveau — indique si les données sont en cours de chargement
+    isLoading: boolean;
 
-    loadBudgets: () => Promise<void>; // nouveau — charge depuis SQLite
+    loadBudgets: () => Promise<void>;
     getActiveBudget: () => Budget | null;
     createBudget: (month: number, year: number, totalAmount: number) => void;
     addCategory: (budgetId: string, category: Omit<Category, 'id'>) => void;
@@ -15,9 +15,36 @@ interface BudgetStore {
     deleteExpense: (budgetId: string, expenseId: string) => void;
     deleteCategory: (budgetId: string, categoryId: string) => void;
     updateBudgetAmount: (budgetId: string, totalAmount: number) => void;
+    addSubscription: (budgetId: string, subscription: Omit<Subscription, 'id' | 'createdAt' | 'isActive'>) => void;
+    deleteSubscription: (budgetId: string, subscriptionId: string) => void;
+    toggleSubscription: (budgetId: string, subscriptionId: string) => void;
+    getMonthlySubscriptionsTotal: (budgetId: string) => number;
+    getRemainingSubscriptionsTotal: (budgetId: string) => number;
+    getNextSubscriptionDay: (budgetId: string) => number | null;
 }
 
 const generateId = () => Math.random().toString(36).slice(2);
+
+const getTodayForBudget = (budget: Budget | undefined) => {
+    const now = new Date();
+
+    if (!budget) return now.getDate();
+
+    const isCurrentMonth = now.getMonth() + 1 === budget.month && now.getFullYear() === budget.year;
+    return isCurrentMonth ? now.getDate() : 1;
+};
+
+const cloneActiveSubscriptions = (budget: Budget | undefined): Subscription[] => {
+    if (!budget) return [];
+
+    return (budget.subscriptions ?? [])
+        .filter(subscription => subscription.isActive)
+        .map(subscription => ({
+            ...subscription,
+            id: generateId(),
+            createdAt: new Date().toISOString(),
+        }));
+};
 
 export const useBudgetStore = create<BudgetStore>((set, get) => ({
 
@@ -43,6 +70,8 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
     },
 
     createBudget: (month, year, totalAmount) => {
+        const previousBudget = get().budgets[get().budgets.length - 1];
+
         const newBudget: Budget = {
             id: generateId(),
             month,
@@ -50,6 +79,7 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
             totalAmount,
             categories: [],
             expenses: [],
+            subscriptions: cloneActiveSubscriptions(previousBudget),
         };
 
         set(state => ({
@@ -144,6 +174,102 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
 
             return { budgets: updatedBudgets };
         });
+    },
+
+    addSubscription: (budgetId, subscription) => {
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
+                    ? {
+                        ...b,
+                        subscriptions: [
+                            ...(b.subscriptions ?? []),
+                            {
+                                ...subscription,
+                                id: generateId(),
+                                isActive: true,
+                                createdAt: new Date().toISOString(),
+                            },
+                        ],
+                    }
+                    : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return {budgets: updatedBudgets};
+        });
+    },
+
+    deleteSubscription: (budgetId, subscriptionId) => {
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
+                    ? {
+                        ...b,
+                        subscriptions: (b.subscriptions ?? []).filter(subscription => subscription.id !== subscriptionId),
+                    }
+                    : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return {budgets: updatedBudgets};
+        });
+    },
+
+    toggleSubscription: (budgetId, subscriptionId) => {
+        set(state => {
+            const updatedBudgets = state.budgets.map(b =>
+                b.id === budgetId
+                    ? {
+                        ...b,
+                        subscriptions: (b.subscriptions ?? []).map(subscription =>
+                            subscription.id === subscriptionId
+                                ? {...subscription, isActive: !subscription.isActive}
+                                : subscription
+                        ),
+                    }
+                    : b
+            );
+
+            const updatedBudget = updatedBudgets.find(b => b.id === budgetId);
+            if (updatedBudget) budgetRepository.save(updatedBudget);
+
+            return {budgets: updatedBudgets};
+        });
+    },
+
+    getMonthlySubscriptionsTotal: (budgetId) => {
+        const budget = get().budgets.find(item => item.id === budgetId);
+        return (budget?.subscriptions ?? [])
+            .filter(subscription => subscription.isActive)
+            .reduce((sum, subscription) => sum + subscription.amount, 0);
+    },
+
+    getRemainingSubscriptionsTotal: (budgetId) => {
+        const budget = get().budgets.find(item => item.id === budgetId);
+        const today = getTodayForBudget(budget);
+
+        return (budget?.subscriptions ?? [])
+            .filter(subscription => subscription.isActive && subscription.dayOfMonth >= today)
+            .reduce((sum, subscription) => sum + subscription.amount, 0);
+    },
+
+    getNextSubscriptionDay: (budgetId) => {
+        const budget = get().budgets.find(item => item.id === budgetId);
+        const activeSubscriptions = (budget?.subscriptions ?? [])
+            .filter(subscription => subscription.isActive)
+            .sort((a, b) => a.dayOfMonth - b.dayOfMonth);
+
+        if (activeSubscriptions.length === 0) return null;
+
+        const today = getTodayForBudget(budget);
+        const nextUpcoming = activeSubscriptions.find(subscription => subscription.dayOfMonth >= today);
+
+        return nextUpcoming?.dayOfMonth ?? activeSubscriptions[0].dayOfMonth;
     },
 
 }));
