@@ -14,6 +14,7 @@ import {subscriptionCardStyles} from './subscription-card.styles';
 import {Category} from '@/domain/entities/Budget';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {MONTHS} from "@/constants/months";
+import {formatCurrency} from '@/utils/currency';
 
 
 // Map couleur → valeurs du theme
@@ -64,13 +65,13 @@ export default function HomeScreen() {
     const estimatedAvailable = currentAvailable - upcomingSubscriptions;
     const hasUpcomingSubscriptions = upcomingSubscriptions > 0;
     const estimatedSubtitle = hasUpcomingSubscriptions
-        ? `${estimatedAvailable.toFixed(2)} € après charges à venir`
+        ? `${formatCurrency(estimatedAvailable, {compact: true})} après charges à venir`
         : 'Aucune charge récurrente restante ce mois';
 
     const subscriptionsHelperText = nextSubscriptionDay && hasUpcomingSubscriptions
-        ? `Prochain prélèvement le ${nextSubscriptionDay} · ${monthlySubscriptions.toFixed(2)} € au total ce mois`
+        ? `Prochain prélèvement le ${nextSubscriptionDay} · ${formatCurrency(monthlySubscriptions, {compact: true})} au total ce mois`
         : monthlySubscriptions > 0
-            ? `${monthlySubscriptions.toFixed(2)} € d’abonnements actifs ce mois`
+            ? `${formatCurrency(monthlySubscriptions, {compact: true})} d’abonnements actifs ce mois`
             : 'Aucun abonnement actif pour le moment';
 
     const progressPercent = budget && budget.totalAmount > 0
@@ -136,9 +137,9 @@ export default function HomeScreen() {
 
                 {/* Montant */}
                 <Text style={[styles.catSpent, isOver && styles.catSpentOver]}>
-                    {item.allocatedAmount - categorySpent} €
+                    {formatCurrency(item.allocatedAmount - categorySpent, {compact: true})}
                 </Text>
-                <Text style={styles.catBudget}>restant sur {item.allocatedAmount} €</Text>
+                <Text style={styles.catBudget}>restant sur {formatCurrency(item.allocatedAmount, {compact: true})}</Text>
 
                 {/* Barre de progression */}
                 <View style={styles.catProgressTrack}>
@@ -202,7 +203,7 @@ export default function HomeScreen() {
                             <View style={styles.budgetCard}>
                                 <Text style={styles.budgetLabel}>Disponible actuel</Text>
                                 <Text style={styles.budgetAmount}>
-                                    {currentAvailable.toFixed(2)} <Text style={styles.budgetCurrency}>€</Text>
+                                    {formatCurrency(currentAvailable, {compact: true, showCurrency: false})} <Text style={styles.budgetCurrency}>€</Text>
                                 </Text>
                                 <Text style={styles.budgetSub}>
                                     {estimatedSubtitle}
@@ -213,7 +214,7 @@ export default function HomeScreen() {
                                     <View style={styles.progressHeader}>
                                         <Text style={styles.progressLabel}>Budget consommé</Text>
                                         <Text style={styles.progressValue}>
-                                            {totalSpent.toFixed(2)} € / {budget?.totalAmount ?? 0} €
+                                            {formatCurrency(totalSpent, {compact: true})} / {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
                                         </Text>
                                     </View>
                                     <View style={styles.progressTrack}>
@@ -237,12 +238,12 @@ export default function HomeScreen() {
                                                 estimatedAvailable < 0 && styles.statValueDanger,
                                             ]}
                                         >
-                                            {estimatedAvailable.toFixed(2)} €
+                                            {formatCurrency(estimatedAvailable, {compact: true})}
                                         </Text>
                                     </View>
                                     <View style={styles.statBox}>
                                         <Text style={styles.statLabel}>Budget total</Text>
-                                        <Text style={styles.statValue}>{(budget?.totalAmount ?? 0).toFixed(2)} €</Text>
+                                        <Text style={styles.statValue}>{formatCurrency(budget?.totalAmount ?? 0, {compact: true})}</Text>
                                     </View>
                                 </View>
 
@@ -268,7 +269,7 @@ export default function HomeScreen() {
                             </View>
 
                             <Text style={subscriptionCardStyles.highlightValue}>
-                                {upcomingSubscriptions.toFixed(2)} €
+                                {formatCurrency(upcomingSubscriptions, {compact: true})}
                             </Text>
                             <Text style={subscriptionCardStyles.helperText}>
                                 {subscriptionsHelperText}

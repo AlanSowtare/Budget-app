@@ -12,6 +12,7 @@ import { useBudgetStore } from '@/store/budgetStore';
 import { colors } from '@/constants/theme';
 import { MONTHS } from '@/constants/months';
 import {styles} from "@/app/edit-budget.styles";
+import {formatCurrency} from '@/utils/currency';
 
 export default function EditBudget() {
 
@@ -50,7 +51,7 @@ export default function EditBudget() {
 
                 {/* Montant actuel en petit */}
                 <Text style={styles.currentLabel}>
-                    Budget actuel : {budget?.totalAmount} €
+                    Budget actuel : {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
                 </Text>
 
                 {/* Champ montant */}

@@ -18,13 +18,13 @@ export const styles = StyleSheet.create({
         paddingBottom: spacing.sm,
     },
     greeting: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.sm,
         color: colors.textMuted,
         marginBottom: 2,
     },
     monthTitle: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: 26,
         color: colors.text,
         letterSpacing: -0.5,
@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
         borderColor: colors.border,
     },
     budgetLabel: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -56,25 +56,26 @@ export const styles = StyleSheet.create({
         marginBottom: spacing.xs,
     },
     budgetAmount: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.display,
         color: colors.text,
-        letterSpacing: -1,
+        letterSpacing: -0.6,
         lineHeight: 48,
     },
     budgetCurrency: {
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: 22,
         color: colors.textMuted,
     },
     budgetSub: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.md,
         color: colors.textMuted,
         marginBottom: spacing.lg,
     },
     budgetRemaining: {
         color: colors.accent,
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
     },
 
     // ── PROGRESS ──
@@ -87,12 +88,12 @@ export const styles = StyleSheet.create({
         marginBottom: spacing.sm,
     },
     progressLabel: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.sm,
         color: colors.textMuted,
     },
     progressValue: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.sm,
         color: colors.textSoft,
     },
@@ -122,7 +123,7 @@ export const styles = StyleSheet.create({
         borderColor: colors.border,
     },
     statLabel: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -130,7 +131,7 @@ export const styles = StyleSheet.create({
         marginBottom: 2,
     },
     statValue: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: fontSize.xl,
         color: colors.text,
     },
@@ -140,7 +141,7 @@ export const styles = StyleSheet.create({
 
     // ── SECTION TITLE ──
     sectionTitle: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -185,18 +186,18 @@ export const styles = StyleSheet.create({
         fontSize: 18,
     },
     catName: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: fontSize.md,
         color: colors.text,
     },
     catCount: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.xs,
         color: colors.textMuted,
         marginBottom: spacing.xs,
     },
     catSpent: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: 'PlusJakartaSans-ExtraBold',
         fontSize: fontSize.xl,
         color: colors.text,
     },
@@ -204,7 +205,7 @@ export const styles = StyleSheet.create({
         color: colors.danger,
     },
     catBudget: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.xs,
         color: colors.textMuted,
         marginBottom: spacing.xs,
@@ -229,7 +230,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     overBadgeText: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.xs,
         color: colors.danger,
     },
@@ -241,14 +242,14 @@ export const styles = StyleSheet.create({
         paddingHorizontal: spacing.lg,
     },
     emptyText: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: 'PlusJakartaSans-Bold',
         fontSize: fontSize.lg,
         color: colors.textMuted,
         textAlign: 'center',
         marginBottom: spacing.sm,
     },
     emptySubText: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.md,
         color: colors.textMuted,
         textAlign: 'center',
@@ -266,13 +267,13 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     addCatBtnText: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: 'PlusJakartaSans-Medium',
         fontSize: fontSize.md,
         color: colors.textMuted,
     },
 
     editHint: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: 'PlusJakartaSans-Regular',
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textAlign: 'center',
