@@ -11,6 +11,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useBudgetStore} from '@/store/budgetStore';
 import {styles} from './subscriptions.styles';
 import {Subscription} from '@/domain/entities/Budget';
+import {formatCurrency} from '@/utils/currency';
 
 export default function SubscriptionsScreen() {
     const router = useRouter();
@@ -19,8 +20,10 @@ export default function SubscriptionsScreen() {
     const budget = useBudgetStore(state => state.getActiveBudget());
     const deleteSubscription = useBudgetStore(state => state.deleteSubscription);
     const toggleSubscription = useBudgetStore(state => state.toggleSubscription);
+    const getMonthlySubscriptionsTotal = useBudgetStore(state => state.getMonthlySubscriptionsTotal);
 
     const subscriptions = [...(budget?.subscriptions ?? [])].sort((a, b) => a.dayOfMonth - b.dayOfMonth);
+    const monthlyTotal = budget ? getMonthlySubscriptionsTotal(budget.id) : 0;
 
     const handleDelete = (subscription: Subscription) => {
         if (!budget) return;
@@ -49,13 +52,10 @@ export default function SubscriptionsScreen() {
 
                 <View style={styles.info}>
                     <Text style={styles.label}>{item.label}</Text>
-                    <Text style={styles.caption}>
-                        Prélèvement prévu le {item.dayOfMonth} de chaque mois
-                    </Text>
                 </View>
 
                 <View style={styles.amountWrap}>
-                    <Text style={styles.amount}>{item.amount.toFixed(2)} €</Text>
+                    <Text style={styles.amount}>{formatCurrency(item.amount)}</Text>
                 </View>
             </View>
 
@@ -100,9 +100,9 @@ export default function SubscriptionsScreen() {
 
             <View style={styles.hero}>
                 <Text style={styles.title}>Abonnements mensuels</Text>
-                <Text style={styles.subtitle}>
-                    Gère tes charges récurrentes pour mieux anticiper ce qui part automatiquement chaque mois.
-                </Text>
+                <View style={styles.totalBadge}>
+                    <Text style={styles.totalValue}>{formatCurrency(monthlyTotal, {compact: true})}</Text>
+                </View>
             </View>
 
             <FlatList

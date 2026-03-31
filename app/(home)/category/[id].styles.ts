@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import {colors, fontSize, radius, spacing} from "@/constants/theme";
+import {colors, fontSize, radius, spacing, fonts} from "@/constants/theme";
 
 export const styles = StyleSheet.create({
 
@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
         paddingVertical: spacing.md,
     },
     deleteBtn: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.danger,
     },
@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     backBtnText: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.md,
         color: colors.textMuted,
     },
@@ -52,12 +52,13 @@ export const styles = StyleSheet.create({
         fontSize: 24,
     },
     catName: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xxl,
         color: colors.text,
+        letterSpacing: -0.4,
     },
     catCount: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         marginTop: 2,
@@ -82,7 +83,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     amountLabel: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -90,9 +91,10 @@ export const styles = StyleSheet.create({
         marginBottom: spacing.xs,
     },
     amountValue: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xl,
         color: colors.text,
+        fontVariant: ['tabular-nums'],
     },
     amountDivider: {
         width: 1,
@@ -112,7 +114,7 @@ export const styles = StyleSheet.create({
 
     // ── SECTION TITLE ──
     sectionTitle: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -148,12 +150,12 @@ export const styles = StyleSheet.create({
         flex: 1,
     },
     expenseLabel: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.md,
         color: colors.text,
     },
     expenseDate: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         marginTop: 2,
@@ -165,9 +167,10 @@ export const styles = StyleSheet.create({
         paddingVertical: spacing.xs,
     },
     expenseAmount: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: colors.danger,
+        fontVariant: ['tabular-nums'],
     },
 
     // ── EMPTY ──
@@ -176,14 +179,14 @@ export const styles = StyleSheet.create({
         paddingVertical: spacing.xl,
     },
     emptyText: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.lg,
         color: colors.textMuted,
         textAlign: 'center',
         marginBottom: spacing.sm,
     },
     emptySubText: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         textAlign: 'center',
@@ -205,7 +208,7 @@ export const styles = StyleSheet.create({
         shadowRadius: 16,
     },
     fabText: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.lg,
         color: '#0d2e22',
     },

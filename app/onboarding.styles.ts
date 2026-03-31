@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize } from '../constants/theme';
+import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
 
 export const styles = StyleSheet.create({
 
@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
     },
 
     title: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: 32,
         color: colors.text,
         letterSpacing: -0.5,
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     },
 
     subtitle: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         textAlign: 'center',
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
     },
 
     label: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
     },
 
     currency: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.xl,
         color: colors.textMuted,
         marginRight: spacing.sm,
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
 
     input: {
         flex: 1,
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.xl,
         color: colors.text,
         paddingVertical: spacing.md,
@@ -105,7 +105,7 @@ export const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.lg,
         color: colors.bg,
     },

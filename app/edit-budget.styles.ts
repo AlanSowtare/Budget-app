@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize } from '@/constants/theme';
+import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
 
 export const styles = StyleSheet.create({
 
@@ -26,13 +26,13 @@ export const styles = StyleSheet.create({
     },
 
     title: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xxl,
         color: colors.text,
     },
 
     subtitle: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         lineHeight: 22,
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     },
 
     currentLabel: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         backgroundColor: colors.surface,
@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
     },
 
     label: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -74,18 +74,20 @@ export const styles = StyleSheet.create({
     },
 
     currency: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.bold,
         fontSize: 36,
         color: colors.textMuted,
         marginRight: spacing.sm,
+        fontVariant: ['tabular-nums'],
     },
 
     amountInput: {
         flex: 1,
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: 48,
         color: colors.text,
         letterSpacing: -1,
+        fontVariant: ['tabular-nums'],
     },
 
     button: {
@@ -105,7 +107,7 @@ export const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.lg,
         color: '#0d2e22',
     },

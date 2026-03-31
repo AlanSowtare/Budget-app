@@ -34,9 +34,7 @@ export default function HomeScreen() {
     const budget = budgets.find(b => b.id === activeBudgetId) ?? null;
 
     const deleteCategory = useBudgetStore(state => state.deleteCategory);
-    const getMonthlySubscriptionsTotal = useBudgetStore(state => state.getMonthlySubscriptionsTotal);
     const getRemainingSubscriptionsTotal = useBudgetStore(state => state.getRemainingSubscriptionsTotal);
-    const getNextSubscriptionDay = useBudgetStore(state => state.getNextSubscriptionDay);
 
     const insets = useSafeAreaInsets();
 
@@ -49,17 +47,9 @@ export default function HomeScreen() {
         // expense = élément courant
     }, [budget]);
 
-    const monthlySubscriptions = budget
-        ? getMonthlySubscriptionsTotal(budget.id)
-        : 0;
-
     const upcomingSubscriptions = budget
         ? getRemainingSubscriptionsTotal(budget.id)
         : 0;
-
-    const nextSubscriptionDay = budget
-        ? getNextSubscriptionDay(budget.id)
-        : null;
 
     const currentAvailable = (budget?.totalAmount ?? 0) - totalSpent;
     const estimatedAvailable = currentAvailable - upcomingSubscriptions;
@@ -67,12 +57,6 @@ export default function HomeScreen() {
     const estimatedSubtitle = hasUpcomingSubscriptions
         ? `Après abonnements restants : ${formatCurrency(estimatedAvailable, {compact: true})}`
         : 'Aucun abonnement restant à prévoir ce mois';
-
-    const subscriptionsHelperText = nextSubscriptionDay && hasUpcomingSubscriptions
-        ? `Prochain prélèvement le ${nextSubscriptionDay} · ${formatCurrency(monthlySubscriptions, {compact: true})} au total ce mois`
-        : monthlySubscriptions > 0
-            ? `${formatCurrency(monthlySubscriptions, {compact: true})} d’abonnements actifs ce mois`
-            : 'Aucun abonnement actif pour le moment';
 
     const progressPercent = budget && budget.totalAmount > 0
         ? Math.max((currentAvailable / budget.totalAmount) * 100, 0)
@@ -299,9 +283,6 @@ export default function HomeScreen() {
 
                             <Text style={subscriptionCardStyles.highlightValue}>
                                 {formatCurrency(upcomingSubscriptions, {compact: true})}
-                            </Text>
-                            <Text style={subscriptionCardStyles.helperText}>
-                                {subscriptionsHelperText}
                             </Text>
 
                             <TouchableOpacity

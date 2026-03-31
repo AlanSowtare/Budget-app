@@ -34,6 +34,13 @@ export const radius = {
   full: 99,
 } as const;
 
+export const fonts = {
+  regular: 'PlusJakartaSans-Regular',
+  medium: 'PlusJakartaSans-Medium',
+  bold: 'PlusJakartaSans-Bold',
+  extraBold: 'PlusJakartaSans-ExtraBold',
+} as const;
+
 export const fontSize = {
   xs: 11,
   sm: 12,

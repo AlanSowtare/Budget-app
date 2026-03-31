@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {colors, fontSize, radius, spacing} from '@/constants/theme';
+import {colors, fontSize, radius, spacing, fonts} from '@/constants/theme';
 
 export const subscriptionCardStyles = StyleSheet.create({
     card: {
@@ -10,7 +10,7 @@ export const subscriptionCardStyles = StyleSheet.create({
         padding: spacing.xl,
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.08)',
-        gap: spacing.md,
+        gap: spacing.sm,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.18,
@@ -24,7 +24,7 @@ export const subscriptionCardStyles = StyleSheet.create({
         gap: spacing.md,
     },
     eyebrow: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -32,30 +32,24 @@ export const subscriptionCardStyles = StyleSheet.create({
         marginBottom: 2,
     },
     title: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.xl,
         color: colors.text,
         flexShrink: 1,
     },
     link: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.accent,
         marginTop: 4,
     },
     highlightValue: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.display,
         color: colors.text,
         letterSpacing: -0.4,
         lineHeight: 46,
-    },
-    helperText: {
-        fontFamily: 'PlusJakartaSans-Regular',
-        fontSize: fontSize.sm,
-        color: colors.textMuted,
-        lineHeight: 22,
-        maxWidth: '94%',
+        fontVariant: ['tabular-nums'],
     },
     addBtn: {
         backgroundColor: colors.accentDim,
@@ -68,7 +62,7 @@ export const subscriptionCardStyles = StyleSheet.create({
         justifyContent: 'center',
     },
     addBtnText: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.md,
         color: colors.accent,
         letterSpacing: 0.1,

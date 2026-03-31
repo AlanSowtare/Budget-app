@@ -12,7 +12,7 @@ import {
     GestureDetector,
 } from 'react-native-gesture-handler';
 import { Expense } from '@/domain/entities/Budget';
-import { colors, spacing, radius, fontSize } from '@/constants/theme';
+import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
 
 interface Props {
     item: Expense;
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     expenseLabel: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.md,
         color: colors.text,
     },
     expenseDate: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         marginTop: 2,
@@ -193,8 +193,9 @@ const styles = StyleSheet.create({
         paddingVertical: spacing.xs,
     },
     expenseAmount: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: colors.danger,
+        fontVariant: ['tabular-nums'],
     },
 });

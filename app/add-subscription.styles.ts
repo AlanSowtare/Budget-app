@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {colors, spacing, radius, fontSize} from '@/constants/theme';
+import {colors, spacing, radius, fontSize, fonts} from '@/constants/theme';
 
 export const styles = StyleSheet.create({
     root: {
@@ -22,12 +22,12 @@ export const styles = StyleSheet.create({
         gap: spacing.xl,
     },
     title: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xxl,
         color: colors.text,
     },
     subtitle: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         lineHeight: 22,
@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
         gap: spacing.xs,
     },
     label: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -62,20 +62,22 @@ export const styles = StyleSheet.create({
         paddingVertical: spacing.md,
     },
     currency: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.bold,
         fontSize: 36,
         color: colors.textMuted,
         marginRight: spacing.sm,
+        fontVariant: ['tabular-nums'],
     },
     amountInput: {
         flex: 1,
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: 48,
         color: colors.text,
         letterSpacing: -1,
+        fontVariant: ['tabular-nums'],
     },
     input: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.lg,
         color: colors.text,
         backgroundColor: colors.surface,
@@ -94,12 +96,12 @@ export const styles = StyleSheet.create({
         gap: spacing.xs,
     },
     tipTitle: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: colors.text,
     },
     tipText: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         lineHeight: 20,
@@ -119,7 +121,7 @@ export const styles = StyleSheet.create({
         opacity: 0.4,
     },
     buttonText: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.lg,
         color: '#0d2e22',
     },

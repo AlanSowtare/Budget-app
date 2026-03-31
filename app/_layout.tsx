@@ -15,10 +15,6 @@ export default function RootLayout() {
         'PlusJakartaSans-Medium': require('../assets/fonts/PlusJakartaSans-Medium.ttf'),
         'PlusJakartaSans-Bold': require('../assets/fonts/PlusJakartaSans-Bold.ttf'),
         'PlusJakartaSans-ExtraBold': require('../assets/fonts/PlusJakartaSans-ExtraBold.ttf'),
-        'DMSans-Regular': require('../assets/fonts/DMSans-Regular.ttf'),
-        'DMSans-Medium': require('../assets/fonts/DMSans-Medium.ttf'),
-        'Syne-Bold': require('../assets/fonts/Syne-Bold.ttf'),
-        'Syne-ExtraBold': require('../assets/fonts/Syne-ExtraBold.ttf'),
     });
 
     const loadBudgets = useBudgetStore(state => state.loadBudgets);

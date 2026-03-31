@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {colors, fontSize, radius, spacing} from '@/constants/theme';
+import {colors, fontSize, radius, spacing, fonts} from '@/constants/theme';
 
 export const styles = StyleSheet.create({
     root: {
@@ -14,30 +14,44 @@ export const styles = StyleSheet.create({
         paddingVertical: spacing.md,
     },
     backBtn: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.md,
         color: colors.textMuted,
     },
     addBtn: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: colors.accent,
     },
     hero: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         paddingHorizontal: spacing.md,
         paddingBottom: spacing.md,
-        gap: spacing.xs,
+        gap: spacing.md,
     },
     title: {
-        fontFamily: 'Syne-ExtraBold',
+        flex: 1,
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xxl,
         color: colors.text,
+        letterSpacing: -0.4,
     },
-    subtitle: {
-        fontFamily: 'DMSans-Regular',
+    totalBadge: {
+        backgroundColor: colors.accentDim,
+        borderRadius: radius.full,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+        borderWidth: 1,
+        borderColor: 'rgba(110,231,183,0.14)',
+        flexShrink: 0,
+    },
+    totalValue: {
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
-        color: colors.textMuted,
-        lineHeight: 22,
+        color: colors.accent,
+        fontVariant: ['tabular-nums'],
     },
     listContent: {
         padding: spacing.md,
@@ -69,30 +83,24 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     dayValue: {
-        fontFamily: 'Syne-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xl,
         color: colors.text,
+        fontVariant: ['tabular-nums'],
     },
     dayLabel: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textTransform: 'uppercase',
     },
     info: {
         flex: 1,
-        gap: 2,
     },
     label: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.lg,
         color: colors.text,
-    },
-    caption: {
-        fontFamily: 'DMSans-Regular',
-        fontSize: fontSize.sm,
-        color: colors.textMuted,
-        lineHeight: 20,
     },
     amountWrap: {
         backgroundColor: colors.accentDim,
@@ -101,9 +109,10 @@ export const styles = StyleSheet.create({
         paddingVertical: spacing.xs,
     },
     amount: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: colors.accent,
+        fontVariant: ['tabular-nums'],
     },
     actionsRow: {
         flexDirection: 'row',
@@ -132,7 +141,7 @@ export const styles = StyleSheet.create({
         borderColor: 'transparent',
     },
     actionText: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.text,
     },
@@ -141,7 +150,7 @@ export const styles = StyleSheet.create({
         borderColor: 'transparent',
     },
     deleteText: {
-        fontFamily: 'DMSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.danger,
     },
@@ -152,13 +161,13 @@ export const styles = StyleSheet.create({
         gap: spacing.sm,
     },
     emptyTitle: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.lg,
         color: colors.text,
         textAlign: 'center',
     },
     emptyText: {
-        fontFamily: 'DMSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         textAlign: 'center',
@@ -172,7 +181,7 @@ export const styles = StyleSheet.create({
         paddingHorizontal: spacing.lg,
     },
     emptyCtaText: {
-        fontFamily: 'Syne-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: '#0d2e22',
     },

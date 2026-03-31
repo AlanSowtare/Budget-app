@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize } from '@/constants/theme';
+import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
 
 export const styles = StyleSheet.create({
 
@@ -26,13 +26,13 @@ export const styles = StyleSheet.create({
     },
 
     title: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xxl,
         color: colors.text,
         marginBottom: spacing.sm,
     },
     subtitle: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         lineHeight: 22,
@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
     },
 
     label: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
 
     input: {
         flex: 1,
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.lg,
         color: colors.text,
         backgroundColor: colors.surface,
@@ -84,14 +84,14 @@ export const styles = StyleSheet.create({
     },
 
     currency: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xl,
         color: colors.textMuted,
         marginRight: spacing.sm,
     },
 
     helperText: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         lineHeight: 20,
@@ -146,7 +146,7 @@ export const styles = StyleSheet.create({
 
     colorCheck: {
         color: colors.text,
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.sm,
     },
 
@@ -167,7 +167,7 @@ export const styles = StyleSheet.create({
     },
 
     buttonText: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.lg,
         color: '#0d2e22',
     },

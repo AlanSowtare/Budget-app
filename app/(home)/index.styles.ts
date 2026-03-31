@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize } from '@/constants/theme';
+import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
 
 export const styles = StyleSheet.create({
 
@@ -18,13 +18,13 @@ export const styles = StyleSheet.create({
         paddingBottom: spacing.sm,
     },
     greeting: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         marginBottom: 2,
     },
     monthTitle: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: 26,
         color: colors.text,
         letterSpacing: -0.5,
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
         marginBottom: spacing.sm,
     },
     budgetLabel: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -68,19 +68,19 @@ export const styles = StyleSheet.create({
         marginBottom: spacing.xs,
     },
     budgetAmount: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.display,
         color: colors.text,
         letterSpacing: -0.6,
         lineHeight: 48,
     },
     budgetCurrency: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: 20,
         color: colors.textSoft,
     },
     budgetSub: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         marginBottom: spacing.xl,
@@ -94,13 +94,13 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     statusBadgeText: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.xs,
         letterSpacing: 0.2,
     },
     budgetRemaining: {
         color: colors.accent,
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
     },
 
     // ── PROGRESS ──
@@ -113,12 +113,12 @@ export const styles = StyleSheet.create({
         marginBottom: spacing.sm,
     },
     progressLabel: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.sm,
         color: colors.textMuted,
     },
     progressValue: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.textSoft,
     },
@@ -148,7 +148,7 @@ export const styles = StyleSheet.create({
         borderColor: 'rgba(255,255,255,0.05)',
     },
     statLabel: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -156,7 +156,7 @@ export const styles = StyleSheet.create({
         marginBottom: 2,
     },
     statValue: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.xl,
         color: colors.text,
     },
@@ -164,12 +164,12 @@ export const styles = StyleSheet.create({
         color: colors.danger,
     },
     statValueEmphasis: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
     },
 
     // ── SECTION TITLE ──
     sectionTitle: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -220,19 +220,19 @@ export const styles = StyleSheet.create({
         fontSize: 19,
     },
     catName: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: colors.text,
         lineHeight: 20,
     },
     catCount: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         marginBottom: spacing.sm,
     },
     catSpent: {
-        fontFamily: 'PlusJakartaSans-ExtraBold',
+        fontFamily: fonts.extraBold,
         fontSize: fontSize.xl,
         color: colors.text,
         letterSpacing: -0.2,
@@ -241,7 +241,7 @@ export const styles = StyleSheet.create({
         color: colors.danger,
     },
     catBudget: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         marginBottom: spacing.sm,
@@ -267,7 +267,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'flex-start',
     },
     overBadgeText: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.xs,
         color: colors.danger,
         letterSpacing: 0.2,
@@ -280,14 +280,14 @@ export const styles = StyleSheet.create({
         paddingHorizontal: spacing.lg,
     },
     emptyText: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.lg,
         color: colors.textMuted,
         textAlign: 'center',
         marginBottom: spacing.sm,
     },
     emptySubText: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.md,
         color: colors.textMuted,
         textAlign: 'center',
@@ -305,13 +305,13 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     addCatBtnText: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.md,
         color: colors.textMuted,
     },
 
     editHint: {
-        fontFamily: 'PlusJakartaSans-Regular',
+        fontFamily: fonts.regular,
         fontSize: fontSize.xs,
         color: colors.textMuted,
         textAlign: 'center',

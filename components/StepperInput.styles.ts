@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize } from '../constants/theme';
+import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
 
 export const styles = StyleSheet.create({
     container: {
@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
         gap: spacing.xs,
     },
     label: {
-        fontFamily: 'PlusJakartaSans-Medium',
+        fontFamily: fonts.medium,
         fontSize: fontSize.sm,
         color: colors.textMuted,
         textTransform: 'uppercase',
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
         opacity: 0.3,
     },
     btnText: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: 22,
         color: colors.accent,
         lineHeight: 24,
@@ -42,8 +42,9 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     value: {
-        fontFamily: 'PlusJakartaSans-Bold',
+        fontFamily: fonts.bold,
         fontSize: fontSize.xl,
         color: colors.text,
+        fontVariant: ['tabular-nums'],
     },
 });
