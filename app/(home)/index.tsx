@@ -79,11 +79,7 @@ export default function HomeScreen() {
 
     const currentAvailable = (budget?.totalAmount ?? 0) - totalSpent - debitedSubscriptions;
     const estimatedAvailable = currentAvailable - upcomingSubscriptions;
-    const hasUpcomingSubscriptions = upcomingSubscriptions > 0;
     const totalConsumed = totalSpent + debitedSubscriptions;
-    const estimatedSubtitle = hasUpcomingSubscriptions
-        ? `Après abonnements restants : ${formatCurrency(estimatedAvailable, {compact: true})}`
-        : 'Aucun abonnement restant à prévoir ce mois';
 
     const progressPercent = budget && budget.totalAmount > 0
         ? Math.max((currentAvailable / budget.totalAmount) * 100, 0)
@@ -168,17 +164,13 @@ export default function HomeScreen() {
                     <Text style={styles.catEmoji}>{item.emoji}</Text>
                 </View>
 
-                {/* Nom + nb dépenses */}
+                {/* Nom */}
                 <Text style={styles.catName}>{item.name}</Text>
-                <Text style={styles.catCount}>
-                    {budget?.expenses.filter(e => e.categoryId === item.id).length ?? 0} dépenses
-                </Text>
 
                 {/* Montant */}
                 <Text style={[styles.catSpent, isOver && styles.catSpentOver]}>
                     {formatCurrency(item.allocatedAmount - categorySpent, {compact: true})}
                 </Text>
-                <Text style={styles.catBudget}>restant sur {formatCurrency(item.allocatedAmount, {compact: true})}</Text>
 
                 {/* Barre de progression */}
                 <View style={styles.catProgressTrack}>
@@ -254,14 +246,10 @@ export default function HomeScreen() {
                                 <Text style={styles.budgetAmount}>
                                     {formatCurrency(currentAvailable, {compact: true, showCurrency: false})} <Text style={styles.budgetCurrency}>€</Text>
                                 </Text>
-                                <Text style={styles.budgetSub}>
-                                    {estimatedSubtitle}
-                                </Text>
 
                                 {/* Barre de progression globale */}
                                 <View style={styles.progressWrap}>
                                     <View style={styles.progressHeader}>
-                                        <Text style={styles.progressLabel}>Conso du mois</Text>
                                         <Text style={styles.progressValue}>
                                             {formatCurrency(totalConsumed, {compact: true})} / {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
                                         </Text>
@@ -303,8 +291,16 @@ export default function HomeScreen() {
                             </View>
                         </TouchableOpacity>
 
+                        {/* Titre section catégories */}
+                        <Text style={styles.sectionTitle}>Catégories</Text>
 
-                        {/* ── ABONNEMENTS MENSUELS ── */}
+                    </View>
+                }
+
+                // ── FOOTER ──
+                // Carte abonnements + bouton catégorie en bas de liste
+                ListFooterComponent={
+                    <View>
                         <TouchableOpacity
                             style={subscriptionCardStyles.card}
                             activeOpacity={0.88}
@@ -330,21 +326,13 @@ export default function HomeScreen() {
                             </TouchableOpacity>
                         </TouchableOpacity>
 
-                        {/* Titre section catégories */}
-                        <Text style={styles.sectionTitle}>Catégories</Text>
-
+                        <TouchableOpacity
+                            style={styles.addCatBtn}
+                            onPress={() => router.push('/add-category' as any)}
+                        >
+                            <Text style={styles.addCatBtnText}>＋ Ajouter une catégorie</Text>
+                        </TouchableOpacity>
                     </View>
-                }
-
-                // ── FOOTER ──
-                // Bouton "Ajouter une catégorie" en bas de liste
-                ListFooterComponent={
-                    <TouchableOpacity
-                        style={styles.addCatBtn}
-                        onPress={() => router.push('/add-category' as any)}
-                    >
-                        <Text style={styles.addCatBtnText}>＋ Ajouter une catégorie</Text>
-                    </TouchableOpacity>
                 }
 
                 // ── LISTE VIDE ──
