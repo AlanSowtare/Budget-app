@@ -66,6 +66,12 @@ export const styles = StyleSheet.create({
         padding: spacing.md,
         gap: spacing.md,
     },
+    rowPast: {
+        borderColor: 'rgba(110,231,183,0.16)',
+    },
+    rowUpcoming: {
+        borderColor: 'rgba(251,146,60,0.2)',
+    },
     rowInactive: {
         opacity: 0.55,
     },
@@ -82,17 +88,17 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    dayBadgePast: {
+        backgroundColor: colors.accentDim,
+    },
+    dayBadgeUpcoming: {
+        backgroundColor: colors.orangeDim,
+    },
     dayValue: {
         fontFamily: fonts.extraBold,
         fontSize: fontSize.xl,
         color: colors.text,
         fontVariant: ['tabular-nums'],
-    },
-    dayLabel: {
-        fontFamily: fonts.regular,
-        fontSize: fontSize.xs,
-        color: colors.textMuted,
-        textTransform: 'uppercase',
     },
     info: {
         flex: 1,
@@ -103,16 +109,42 @@ export const styles = StyleSheet.create({
         color: colors.text,
     },
     amountWrap: {
-        backgroundColor: colors.accentDim,
+        backgroundColor: colors.surface2,
         borderRadius: radius.md,
         paddingHorizontal: spacing.sm,
         paddingVertical: spacing.xs,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.xs,
+    },
+    amountWrapPast: {
+        backgroundColor: colors.accentDim,
+    },
+    amountWrapUpcoming: {
+        backgroundColor: colors.orangeDim,
     },
     amount: {
         fontFamily: fonts.bold,
         fontSize: fontSize.md,
         color: colors.accent,
         fontVariant: ['tabular-nums'],
+    },
+    amountUpcoming: {
+        color: colors.warning,
+    },
+    stateDot: {
+        width: 7,
+        height: 7,
+        borderRadius: radius.full,
+    },
+    stateDotPast: {
+        backgroundColor: colors.accent,
+    },
+    stateDotUpcoming: {
+        backgroundColor: colors.warning,
+    },
+    stateDotInactive: {
+        backgroundColor: colors.textMuted,
     },
     actionsRow: {
         flexDirection: 'row',

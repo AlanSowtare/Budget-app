@@ -13,6 +13,26 @@ import {styles} from './subscriptions.styles';
 import {Subscription} from '@/domain/entities/Budget';
 import {formatCurrency} from '@/utils/currency';
 
+const getDaysInMonth = (year: number, month: number) => new Date(year, month, 0).getDate();
+
+const getBillingDayForBudget = (month?: number, year?: number) => {
+    if (!month || !year) return 0;
+
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+        return getDaysInMonth(year, month);
+    }
+
+    if (year === currentYear && month === currentMonth) {
+        return now.getDate();
+    }
+
+    return 0;
+};
+
 export default function SubscriptionsScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
@@ -22,7 +42,12 @@ export default function SubscriptionsScreen() {
     const toggleSubscription = useBudgetStore(state => state.toggleSubscription);
     const getMonthlySubscriptionsTotal = useBudgetStore(state => state.getMonthlySubscriptionsTotal);
 
-    const subscriptions = [...(budget?.subscriptions ?? [])].sort((a, b) => a.dayOfMonth - b.dayOfMonth);
+    const billingDay = getBillingDayForBudget(budget?.month, budget?.year);
+
+    const subscriptions = [...(budget?.subscriptions ?? [])].sort((a, b) => {
+        if (a.dayOfMonth !== b.dayOfMonth) return a.dayOfMonth - b.dayOfMonth;
+        return a.label.localeCompare(b.label);
+    });
     const monthlyTotal = budget ? getMonthlySubscriptionsTotal(budget.id) : 0;
 
     const handleDelete = (subscription: Subscription) => {
@@ -42,20 +67,50 @@ export default function SubscriptionsScreen() {
         );
     };
 
-    const renderItem = ({item}: { item: Subscription }) => (
-        <View style={[styles.row, !item.isActive && styles.rowInactive]}>
+    const renderItem = ({item}: { item: Subscription }) => {
+        const effectiveDay = budget
+            ? Math.min(item.dayOfMonth, getDaysInMonth(budget.year, budget.month))
+            : item.dayOfMonth;
+        const isPast = item.isActive && effectiveDay <= billingDay;
+        const isUpcoming = item.isActive && !isPast;
+
+        return (
+        <View
+            style={[
+                styles.row,
+                item.isActive ? (isPast ? styles.rowPast : styles.rowUpcoming) : styles.rowInactive,
+            ]}
+        >
             <View style={styles.rowMain}>
-                <View style={styles.dayBadge}>
+                <View
+                    style={[
+                        styles.dayBadge,
+                        isPast && styles.dayBadgePast,
+                        isUpcoming && styles.dayBadgeUpcoming,
+                    ]}
+                >
                     <Text style={styles.dayValue}>{item.dayOfMonth}</Text>
-                    <Text style={styles.dayLabel}>jour</Text>
                 </View>
 
                 <View style={styles.info}>
                     <Text style={styles.label}>{item.label}</Text>
                 </View>
 
-                <View style={styles.amountWrap}>
-                    <Text style={styles.amount}>{formatCurrency(item.amount)}</Text>
+                <View
+                    style={[
+                        styles.amountWrap,
+                        isPast && styles.amountWrapPast,
+                        isUpcoming && styles.amountWrapUpcoming,
+                    ]}
+                >
+                    <View
+                        style={[
+                            styles.stateDot,
+                            isPast ? styles.stateDotPast : styles.stateDotUpcoming,
+                            !item.isActive && styles.stateDotInactive,
+                        ]}
+                    />
+                    <Text style={[styles.amount, isUpcoming && styles.amountUpcoming]}>{formatCurrency(item.amount)}</Text>
                 </View>
             </View>
 
@@ -86,6 +141,7 @@ export default function SubscriptionsScreen() {
             </View>
         </View>
     );
+    };
 
     return (
         <View style={[styles.root, {paddingTop: insets.top}]}>
