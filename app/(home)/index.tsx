@@ -27,6 +27,27 @@ const COLOR_MAP: Record<string, { base: string; dim: string }> = {
     danger: {base: colors.danger, dim: colors.dangerDim},
 };
 
+const getCategoryRemainingBadge = (remainingPercent: number) => {
+    if (remainingPercent <= 10) {
+        return {
+            textColor: colors.danger,
+            backgroundColor: colors.dangerDim,
+        };
+    }
+
+    if (remainingPercent <= 30) {
+        return {
+            textColor: colors.warning,
+            backgroundColor: colors.orangeDim,
+        };
+    }
+
+    return {
+        textColor: colors.accent,
+        backgroundColor: colors.accentDim,
+    };
+};
+
 export default function HomeScreen() {
     const router = useRouter();
     const budgets = useBudgetStore(state => state.budgets);
@@ -34,6 +55,7 @@ export default function HomeScreen() {
     const budget = budgets.find(b => b.id === activeBudgetId) ?? null;
 
     const deleteCategory = useBudgetStore(state => state.deleteCategory);
+    const getDebitedSubscriptionsTotal = useBudgetStore(state => state.getDebitedSubscriptionsTotal);
     const getRemainingSubscriptionsTotal = useBudgetStore(state => state.getRemainingSubscriptionsTotal);
 
     const insets = useSafeAreaInsets();
@@ -47,13 +69,18 @@ export default function HomeScreen() {
         // expense = élément courant
     }, [budget]);
 
+    const debitedSubscriptions = budget
+        ? getDebitedSubscriptionsTotal(budget.id)
+        : 0;
+
     const upcomingSubscriptions = budget
         ? getRemainingSubscriptionsTotal(budget.id)
         : 0;
 
-    const currentAvailable = (budget?.totalAmount ?? 0) - totalSpent;
+    const currentAvailable = (budget?.totalAmount ?? 0) - totalSpent - debitedSubscriptions;
     const estimatedAvailable = currentAvailable - upcomingSubscriptions;
     const hasUpcomingSubscriptions = upcomingSubscriptions > 0;
+    const totalConsumed = totalSpent + debitedSubscriptions;
     const estimatedSubtitle = hasUpcomingSubscriptions
         ? `Après abonnements restants : ${formatCurrency(estimatedAvailable, {compact: true})}`
         : 'Aucun abonnement restant à prévoir ce mois';
@@ -109,12 +136,15 @@ export default function HomeScreen() {
             .filter(e => e.categoryId === item.id)
             .reduce((sum, e) => sum + e.amount, 0) ?? 0;
 
-        const categoryPercent = Math.max(
-            ((item.allocatedAmount - categorySpent) / item.allocatedAmount) * 100, 0
-        );
+        const categoryPercent = item.allocatedAmount > 0
+            ? Math.max(((item.allocatedAmount - categorySpent) / item.allocatedAmount) * 100, 0)
+            : 0;
+
+        const remainingPercent = Math.min(Math.round(categoryPercent), 100);
 
         const isOver = categorySpent > item.allocatedAmount;
         const colorSet = COLOR_MAP[item.color] ?? COLOR_MAP.blue;
+        const remainingBadge = getCategoryRemainingBadge(remainingPercent);
 
         return (
             <TouchableOpacity
@@ -125,6 +155,13 @@ export default function HomeScreen() {
             >
                 {/* Bordure colorée en haut */}
                 <View style={[styles.catTileBorder, {backgroundColor: colorSet.base}]}/>
+
+                {/* Badge pourcentage restant */}
+                <View style={[styles.catPercentBadge, {backgroundColor: remainingBadge.backgroundColor}]}>
+                    <Text style={[styles.catPercentBadgeText, {color: remainingBadge.textColor}]}>
+                        {remainingPercent}%
+                    </Text>
+                </View>
 
                 {/* Icône */}
                 <View style={[styles.catIcon, {backgroundColor: colorSet.dim}]}>
@@ -226,7 +263,7 @@ export default function HomeScreen() {
                                     <View style={styles.progressHeader}>
                                         <Text style={styles.progressLabel}>Conso du mois</Text>
                                         <Text style={styles.progressValue}>
-                                            {formatCurrency(totalSpent, {compact: true})} / {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
+                                            {formatCurrency(totalConsumed, {compact: true})} / {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
                                         </Text>
                                     </View>
                                     <View style={styles.progressTrack}>

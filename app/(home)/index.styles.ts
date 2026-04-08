@@ -208,6 +208,20 @@ export const styles = StyleSheet.create({
         height: 3,
         opacity: 0.95,
     },
+    catPercentBadge: {
+        position: 'absolute',
+        top: spacing.md,
+        right: spacing.md,
+        borderRadius: radius.full,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        zIndex: 2,
+    },
+    catPercentBadgeText: {
+        fontFamily: fonts.medium,
+        fontSize: fontSize.xs,
+        letterSpacing: 0.2,
+    },
     catIcon: {
         width: 42,
         height: 42,

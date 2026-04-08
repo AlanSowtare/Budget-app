@@ -20,19 +20,72 @@ interface BudgetStore {
     deleteSubscription: (budgetId: string, subscriptionId: string) => void;
     toggleSubscription: (budgetId: string, subscriptionId: string) => void;
     getMonthlySubscriptionsTotal: (budgetId: string) => number;
+    getDebitedSubscriptionsTotal: (budgetId: string) => number;
     getRemainingSubscriptionsTotal: (budgetId: string) => number;
     getNextSubscriptionDay: (budgetId: string) => number | null;
 }
 
 const generateId = () => Math.random().toString(36).slice(2);
 
-const getTodayForBudget = (budget: Budget | undefined) => {
+const getDaysInMonth = (year: number, month: number) => new Date(year, month, 0).getDate();
+
+const getBillingDayForBudget = (budget: Budget | undefined) => {
+    if (!budget) return 0;
+
     const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
 
-    if (!budget) return now.getDate();
+    if (budget.year < currentYear || (budget.year === currentYear && budget.month < currentMonth)) {
+        return getDaysInMonth(budget.year, budget.month);
+    }
 
-    const isCurrentMonth = now.getMonth() + 1 === budget.month && now.getFullYear() === budget.year;
-    return isCurrentMonth ? now.getDate() : 1;
+    if (budget.year === currentYear && budget.month === currentMonth) {
+        return now.getDate();
+    }
+
+    return 0;
+};
+
+const getEffectiveSubscriptionDay = (budget: Budget, dayOfMonth: number) =>
+    Math.min(dayOfMonth, getDaysInMonth(budget.year, budget.month));
+
+const isSubscriptionEligibleForBudgetMonth = (budget: Budget, subscription: Subscription) => {
+    if (!subscription.createdAt) return true;
+
+    const createdAt = new Date(subscription.createdAt);
+    if (Number.isNaN(createdAt.getTime())) return true;
+
+    const budgetMonthIndex = budget.month - 1;
+
+    if (createdAt.getFullYear() < budget.year) return true;
+    if (createdAt.getFullYear() > budget.year) return false;
+    return createdAt.getMonth() <= budgetMonthIndex;
+};
+
+const isSubscriptionActiveBeforeDebitDay = (budget: Budget, subscription: Subscription) => {
+    if (!subscription.createdAt) return true;
+
+    const createdAt = new Date(subscription.createdAt);
+    if (Number.isNaN(createdAt.getTime())) return true;
+
+    const isSameMonth =
+        createdAt.getFullYear() === budget.year &&
+        createdAt.getMonth() === budget.month - 1;
+
+    if (!isSameMonth) return true;
+
+    const effectiveDay = getEffectiveSubscriptionDay(budget, subscription.dayOfMonth);
+    return createdAt.getDate() <= effectiveDay;
+};
+
+const isSubscriptionDue = (budget: Budget, subscription: Subscription, billingDay: number) => {
+    if (!subscription.isActive || billingDay <= 0) return false;
+    if (!isSubscriptionEligibleForBudgetMonth(budget, subscription)) return false;
+    if (!isSubscriptionActiveBeforeDebitDay(budget, subscription)) return false;
+
+    const effectiveDay = getEffectiveSubscriptionDay(budget, subscription.dayOfMonth);
+    return effectiveDay <= billingDay;
 };
 
 const cloneActiveSubscriptions = (budget: Budget | undefined): Subscription[] => {
@@ -276,27 +329,53 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
             .reduce((sum, subscription) => sum + subscription.amount, 0);
     },
 
+    getDebitedSubscriptionsTotal: (budgetId) => {
+        const budget = get().budgets.find(item => item.id === budgetId);
+        if (!budget) return 0;
+
+        const billingDay = getBillingDayForBudget(budget);
+
+        return (budget.subscriptions ?? [])
+            .filter(subscription => isSubscriptionDue(budget, subscription, billingDay))
+            .reduce((sum, subscription) => sum + subscription.amount, 0);
+    },
+
     getRemainingSubscriptionsTotal: (budgetId) => {
         const budget = get().budgets.find(item => item.id === budgetId);
-        const today = getTodayForBudget(budget);
+        if (!budget) return 0;
 
-        return (budget?.subscriptions ?? [])
-            .filter(subscription => subscription.isActive && subscription.dayOfMonth >= today)
+        const billingDay = getBillingDayForBudget(budget);
+
+        return (budget.subscriptions ?? [])
+            .filter(subscription => {
+                if (!subscription.isActive) return false;
+                if (!isSubscriptionEligibleForBudgetMonth(budget, subscription)) return false;
+                if (!isSubscriptionActiveBeforeDebitDay(budget, subscription)) return false;
+
+                const effectiveDay = getEffectiveSubscriptionDay(budget, subscription.dayOfMonth);
+                return effectiveDay > billingDay;
+            })
             .reduce((sum, subscription) => sum + subscription.amount, 0);
     },
 
     getNextSubscriptionDay: (budgetId) => {
         const budget = get().budgets.find(item => item.id === budgetId);
-        const activeSubscriptions = (budget?.subscriptions ?? [])
+        if (!budget) return null;
+
+        const billingDay = getBillingDayForBudget(budget);
+
+        const activeSubscriptions = (budget.subscriptions ?? [])
             .filter(subscription => subscription.isActive)
-            .sort((a, b) => a.dayOfMonth - b.dayOfMonth);
+            .filter(subscription => isSubscriptionEligibleForBudgetMonth(budget, subscription))
+            .sort((a, b) => getEffectiveSubscriptionDay(budget, a.dayOfMonth) - getEffectiveSubscriptionDay(budget, b.dayOfMonth));
 
         if (activeSubscriptions.length === 0) return null;
 
-        const today = getTodayForBudget(budget);
-        const nextUpcoming = activeSubscriptions.find(subscription => subscription.dayOfMonth >= today);
+        const nextUpcoming = activeSubscriptions.find(
+            subscription => getEffectiveSubscriptionDay(budget, subscription.dayOfMonth) > billingDay
+        );
 
-        return nextUpcoming?.dayOfMonth ?? activeSubscriptions[0].dayOfMonth;
+        return nextUpcoming?.dayOfMonth ?? null;
     },
 
 }));
