@@ -39,9 +39,11 @@ export default function RootLayout() {
                     <Stack.Screen name="onboarding" />
                     <Stack.Screen name="(home)/index" />
                     <Stack.Screen name="category/[id]" />
+                    <Stack.Screen name="budgets" />
                     <Stack.Screen name="subscriptions" />
                     <Stack.Screen name="add-category" options={{ presentation: 'modal' }} />
                     <Stack.Screen name="add-expense" options={{ presentation: 'modal' }} />
+                    <Stack.Screen name="add-budget" options={{ presentation: 'modal' }} />
                     <Stack.Screen name="add-subscription" options={{ presentation: 'modal' }} />
                     <Stack.Screen name="edit-budget" options={{ presentation: 'modal' }} />
                 </Stack>

@@ -37,6 +37,22 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    menuBtn: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: colors.surface2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: colors.border,
+    },
+    menuBtnText: {
+        color: colors.text,
+        fontFamily: fonts.bold,
+        fontSize: 18,
+        lineHeight: 20,
+    },
 
     // ── BUDGET CARD ──
     budgetCard: {

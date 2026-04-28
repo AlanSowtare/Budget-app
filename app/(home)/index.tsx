@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
     View,
     Text,
@@ -15,6 +15,7 @@ import {Category} from '@/domain/entities/Budget';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {MONTHS} from "@/constants/months";
 import {formatCurrency} from '@/utils/currency';
+import QuickActionsMenu from '@/components/QuickActionsMenu';
 
 
 // Map couleur → valeurs du theme
@@ -50,6 +51,7 @@ const getCategoryRemainingBadge = (remainingPercent: number) => {
 
 export default function HomeScreen() {
     const router = useRouter();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const budgets = useBudgetStore(state => state.budgets);
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
     const budget = budgets.find(b => b.id === activeBudgetId) ?? null;
@@ -205,11 +207,23 @@ export default function HomeScreen() {
                         {MONTHS[(budget?.month ?? 1) - 1]} {budget?.year}
                     </Text>
                 </View>
-                {/* Avatar placeholder */}
-                <View style={styles.avatar}>
-                    <Text>👤</Text>
-                </View>
+                <TouchableOpacity
+                    style={styles.menuBtn}
+                    onPress={() => setIsMenuOpen(true)}
+                    accessibilityRole="button"
+                    accessibilityLabel="Ouvrir le menu"
+                >
+                    <Text style={styles.menuBtnText}>≡</Text>
+                </TouchableOpacity>
             </View>
+
+            <QuickActionsMenu
+                visible={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                onOpenBudgets={() => router.push('/budgets' as any)}
+                onOpenSubscriptions={() => router.push('/subscriptions' as any)}
+                onOpenCurrentBudget={() => router.push('/edit-budget' as any)}
+            />
 
             <FlatList
                 data={budget?.categories ?? []}

@@ -9,7 +9,9 @@ interface BudgetStore {
 
     loadBudgets: () => Promise<void>;
     getActiveBudget: () => Budget | null;
+    setActiveBudget: (budgetId: string) => void;
     createBudget: (month: number, year: number, totalAmount: number) => void;
+    deleteBudget: (budgetId: string) => void;
     addCategory: (budgetId: string, category: Omit<Category, 'id'>) => void;
     addExpense: (budgetId: string, expense: Omit<Expense, 'id' | 'date'>) => void;
     deleteExpense: (budgetId: string, expenseId: string) => void;
@@ -123,6 +125,14 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
         return budgets.find(b => b.id === activeBudgetId) ?? null;
     },
 
+    setActiveBudget: (budgetId) => {
+        set(state => {
+            const exists = state.budgets.some(budget => budget.id === budgetId);
+            if (!exists) return state;
+            return {activeBudgetId: budgetId};
+        });
+    },
+
     createBudget: (month, year, totalAmount) => {
         const previousBudget = get().budgets[get().budgets.length - 1];
 
@@ -143,6 +153,23 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
 
         // Sauvegarde en base après la mise à jour du state
         budgetRepository.save(newBudget);
+    },
+
+    deleteBudget: (budgetId) => {
+        set(state => {
+            const updatedBudgets = state.budgets.filter(budget => budget.id !== budgetId);
+
+            const nextActiveBudgetId = state.activeBudgetId === budgetId
+                ? (updatedBudgets.length > 0 ? updatedBudgets[updatedBudgets.length - 1].id : null)
+                : state.activeBudgetId;
+
+            budgetRepository.deleteById(budgetId);
+
+            return {
+                budgets: updatedBudgets,
+                activeBudgetId: nextActiveBudgetId,
+            };
+        });
     },
 
     addCategory: (budgetId, category) => {

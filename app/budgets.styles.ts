@@ -1,0 +1,155 @@
+import { StyleSheet } from 'react-native';
+import { colors, fontSize, fonts, radius, spacing } from '@/constants/theme';
+export const styles = StyleSheet.create({
+    root: {
+        flex: 1,
+        backgroundColor: colors.bg,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: spacing.md,
+        paddingTop: spacing.md,
+        paddingBottom: spacing.sm,
+    },
+    backBtn: {
+        color: colors.text,
+        fontFamily: fonts.medium,
+        fontSize: fontSize.md,
+    },
+    title: {
+        color: colors.text,
+        fontFamily: fonts.extraBold,
+        fontSize: 26,
+        letterSpacing: -0.4,
+    },
+    subtitle: {
+        color: colors.textMuted,
+        fontFamily: fonts.regular,
+        fontSize: fontSize.sm,
+        paddingHorizontal: spacing.md,
+        marginBottom: spacing.md,
+    },
+    listContent: {
+        paddingHorizontal: spacing.md,
+        paddingBottom: 120,
+        gap: spacing.sm,
+    },
+    card: {
+        backgroundColor: colors.surface,
+        borderRadius: radius.xl,
+        borderWidth: 1,
+        borderColor: colors.border,
+        overflow: 'hidden',
+    },
+    cardMain: {
+        padding: spacing.md,
+        gap: spacing.sm,
+    },
+    topRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    month: {
+        color: colors.text,
+        fontFamily: fonts.bold,
+        fontSize: fontSize.lg,
+    },
+    activeBadge: {
+        backgroundColor: colors.accentDim,
+        borderRadius: radius.full,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+    },
+    activeBadgeText: {
+        color: colors.accent,
+        fontFamily: fonts.medium,
+        fontSize: fontSize.xs,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        gap: spacing.md,
+    },
+    amountLabel: {
+        color: colors.textMuted,
+        fontFamily: fonts.regular,
+        fontSize: fontSize.xs,
+        textTransform: 'uppercase',
+        letterSpacing: 0.6,
+    },
+    amountValue: {
+        color: colors.text,
+        fontFamily: fonts.extraBold,
+        fontSize: 30,
+        letterSpacing: -0.4,
+    },
+    amountCurrency: {
+        color: colors.textSoft,
+        fontFamily: fonts.bold,
+        fontSize: fontSize.md,
+    },
+    rightInfo: {
+        alignItems: 'flex-end',
+    },
+    budgetLabel: {
+        color: colors.textMuted,
+        fontFamily: fonts.regular,
+        fontSize: fontSize.xs,
+        marginBottom: 2,
+    },
+    budgetValue: {
+        color: colors.text,
+        fontFamily: fonts.bold,
+        fontSize: fontSize.md,
+    },
+    deleteBtn: {
+        borderTopWidth: 1,
+        borderTopColor: colors.border,
+        paddingVertical: spacing.sm,
+        alignItems: 'center',
+    },
+    deleteText: {
+        color: colors.danger,
+        fontFamily: fonts.medium,
+        fontSize: fontSize.sm,
+    },
+    floatingCta: {
+        position: 'absolute',
+        left: spacing.md,
+        right: spacing.md,
+        bottom: spacing.lg,
+        borderRadius: radius.full,
+        borderWidth: 1,
+        borderColor: colors.border,
+        backgroundColor: colors.surface2,
+        paddingVertical: spacing.sm + 2,
+        alignItems: 'center',
+    },
+    floatingCtaText: {
+        color: colors.text,
+        fontFamily: fonts.medium,
+        fontSize: fontSize.md,
+    },
+    emptyWrap: {
+        paddingTop: spacing.xl,
+        alignItems: 'center',
+        gap: spacing.sm,
+    },
+    emptyTitle: {
+        color: colors.text,
+        fontFamily: fonts.bold,
+        fontSize: fontSize.lg,
+    },
+    emptyText: {
+        color: colors.textMuted,
+        fontFamily: fonts.regular,
+        fontSize: fontSize.md,
+        textAlign: 'center',
+        lineHeight: 22,
+        paddingHorizontal: spacing.md,
+    },
+});
