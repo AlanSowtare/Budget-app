@@ -6,6 +6,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useBudgetStore } from '@/store/budgetStore';
+import {useTheme} from '@/hooks/useTheme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,6 +22,7 @@ export default function RootLayout() {
     const loadBudgets = useBudgetStore(state => state.loadBudgets);
     const isLoading = useBudgetStore(state => state.isLoading);
     const refreshToday = useBudgetStore(state => state.refreshToday);
+    const {colors, isDark} = useTheme();
 
     useEffect(() => {
         if (fontsLoaded) {
@@ -42,8 +44,8 @@ export default function RootLayout() {
     return (
         <SafeAreaProvider>
             <>
-                <StatusBar style="dark" />
-                <Stack screenOptions={{ headerShown: false }}>
+                <StatusBar style={isDark ? 'light' : 'dark'} />
+                <Stack screenOptions={{ headerShown: false, contentStyle: {backgroundColor: colors.bg} }}>
                     <Stack.Screen name="index" />
                     <Stack.Screen name="onboarding" />
                     <Stack.Screen name="(home)/index" />
