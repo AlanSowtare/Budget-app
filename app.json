@@ -4,7 +4,7 @@
     "slug": "budget-app",
     "version": "1.3.0",
     "orientation": "portrait",
-    "icon": "./assets/fonts/budgetIcon.png",
+    "icon": "./assets/fonts/icon.png",
     "scheme": "budgetapp",
     "userInterfaceStyle": "automatic",
     "platforms": [
