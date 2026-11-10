@@ -44,6 +44,31 @@ export const styles = StyleSheet.create({
     field: {
         gap: spacing.xs,
     },
+    frequencyOptions: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: spacing.sm,
+    },
+    frequencyOption: {
+        borderWidth: 1,
+        borderColor: colors.border,
+        backgroundColor: colors.surface2,
+        borderRadius: radius.md,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+    },
+    frequencyOptionSelected: {
+        borderColor: colors.accent,
+        backgroundColor: colors.accentDim,
+    },
+    frequencyOptionText: {
+        fontFamily: fonts.medium,
+        fontSize: fontSize.sm,
+        color: colors.textMuted,
+    },
+    frequencyOptionTextSelected: {
+        color: colors.accent,
+    },
     label: {
         fontFamily: fonts.medium,
         fontSize: fontSize.sm,

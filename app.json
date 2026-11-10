@@ -4,11 +4,13 @@
     "slug": "budget-app",
     "version": "1.2.0",
     "orientation": "portrait",
-    "icon": "./assets/fonts/budgetIcon.jpeg",
+    "icon": "./assets/fonts/budgetIcon.png",
     "scheme": "budgetapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "buildNumber": "3",
       "supportsTablet": true,
@@ -21,14 +23,13 @@
       "package": "com.alsoftware.budgetapp",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/fonts/budgetIcon.jpeg",
+        "foregroundImage": "./assets/fonts/budgetIcon.png",
         "backgroundColor": "#0d0f14"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/fonts/budgetIcon.jpeg"
+      "favicon": "./assets/fonts/budgetIcon.png"
     },
     "plugins": [
       "expo-router",
@@ -45,7 +46,11 @@
         }
       ],
       "expo-asset",
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-font",
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

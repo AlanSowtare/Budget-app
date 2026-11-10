@@ -22,6 +22,9 @@ export interface Subscription {
     dayOfMonth: number;
     isActive: boolean;
     createdAt: string;
+    frequency: 'monthly' | 'quarterly' | 'semiannual' | 'annual';
+    startMonth: number;
+    startYear: number;
 }
 
 export interface Budget {

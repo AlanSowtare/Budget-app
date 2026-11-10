@@ -1,60 +1,154 @@
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
-    View,
-    Text,
-    FlatList,
-    TouchableOpacity,
     Alert,
+    Pressable,
+    SectionList,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
+import * as SQLite from 'expo-sqlite';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useRouter} from 'expo-router';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useBudgetStore} from '@/store/budgetStore';
 import {styles} from './subscriptions.styles';
 import {Subscription} from '@/domain/entities/Budget';
 import {formatCurrency} from '@/utils/currency';
+import {getSubscriptionsForMonth, ScheduledSubscription} from '@/utils/subscriptionSchedule';
+import {MONTHS} from '@/constants/months';
+import {SwipeableSubscriptionRow, SubscriptionRowItem} from '@/components/SwipeableSubscriptionRow';
 
-const getDaysInMonth = (year: number, month: number) => new Date(year, month, 0).getDate();
+const db = SQLite.openDatabaseSync('budget.db');
+const SWIPE_HINT_FLAG = 'subscriptions_swipe_hint_shown';
 
-const getBillingDayForBudget = (month?: number, year?: number) => {
-    if (!month || !year) return 0;
+interface SubscriptionSection {
+    key: 'upcoming' | 'debited' | 'paused';
+    title: string;
+    data: SubscriptionRowItem[];
+}
 
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1;
-    const currentYear = now.getFullYear();
-
-    if (year < currentYear || (year === currentYear && month < currentMonth)) {
-        return getDaysInMonth(year, month);
-    }
-
-    if (year === currentYear && month === currentMonth) {
-        return now.getDate();
-    }
-
-    return 0;
+const getDaysUntil = (year: number, month: number, day: number, todayKey: string) => {
+    const [todayYear, todayMonth, todayDay] = todayKey.split('-').map(Number);
+    const targetTime = Date.UTC(year, month - 1, day);
+    const todayTime = Date.UTC(todayYear, todayMonth - 1, todayDay);
+    return Math.round((targetTime - todayTime) / 86_400_000);
 };
+
+const toRowItem = (
+    subscription: Subscription,
+    status: SubscriptionRowItem['status'],
+    effectiveDay: number,
+    year: number,
+    month: number,
+    todayKey: string,
+): SubscriptionRowItem => ({
+    id: subscription.id,
+    label: subscription.label,
+    amount: subscription.amount,
+    dayOfMonth: subscription.dayOfMonth,
+    frequency: subscription.frequency,
+    status,
+    effectiveDay,
+    daysUntil: status === 'upcoming' ? getDaysUntil(year, month, effectiveDay, todayKey) : null,
+});
 
 export default function SubscriptionsScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
-
-    const budget = useBudgetStore(state => state.getActiveBudget());
+    const budgets = useBudgetStore(state => state.budgets);
+    const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
+    const todayKey = useBudgetStore(state => state.today);
     const deleteSubscription = useBudgetStore(state => state.deleteSubscription);
     const toggleSubscription = useBudgetStore(state => state.toggleSubscription);
-    const getMonthlySubscriptionsTotal = useBudgetStore(state => state.getMonthlySubscriptionsTotal);
+    const monthlyTotal = useBudgetStore(state =>
+        activeBudgetId ? state.getMonthlySubscriptionsTotal(activeBudgetId) : 0
+    );
+    const upcomingTotal = useBudgetStore(state =>
+        activeBudgetId ? state.getRemainingSubscriptionsTotal(activeBudgetId) : 0
+    );
+    const [pausedExpanded, setPausedExpanded] = useState(false);
+    const [previewItemId, setPreviewItemId] = useState<string | null>(null);
 
-    const billingDay = getBillingDayForBudget(budget?.month, budget?.year);
+    const budget = budgets.find(item => item.id === activeBudgetId) ?? null;
+    const sections = useMemo<SubscriptionSection[]>(() => {
+        if (!budget) return [];
 
-    const subscriptions = [...(budget?.subscriptions ?? [])].sort((a, b) => {
-        if (a.dayOfMonth !== b.dayOfMonth) return a.dayOfMonth - b.dayOfMonth;
-        return a.label.localeCompare(b.label);
-    });
-    const monthlyTotal = budget ? getMonthlySubscriptionsTotal(budget.id) : 0;
+        const [todayYear, todayMonth, todayDay] = todayKey.split('-').map(Number);
+        const today = new Date(todayYear, todayMonth - 1, todayDay);
+        const scheduled = getSubscriptionsForMonth(
+            budget.subscriptions ?? [],
+            budget.year,
+            budget.month,
+            today,
+        );
+        const daysInMonth = new Date(budget.year, budget.month, 0).getDate();
+        const toScheduledRow = (
+            item: ScheduledSubscription,
+        ): SubscriptionRowItem => toRowItem(
+            item,
+            item.status,
+            item.effectiveDay,
+            budget.year,
+            budget.month,
+            todayKey,
+        );
+        const upcoming = scheduled
+            .filter(item => item.status === 'upcoming')
+            .sort((a, b) => a.effectiveDay - b.effectiveDay)
+            .map(toScheduledRow);
+        const debited = scheduled
+            .filter(item => item.status === 'debited')
+            .sort((a, b) => a.effectiveDay - b.effectiveDay)
+            .map(toScheduledRow);
+        const paused = (budget.subscriptions ?? [])
+            .filter(item => !item.isActive)
+            .sort((a, b) =>
+                Math.min(a.dayOfMonth, daysInMonth) - Math.min(b.dayOfMonth, daysInMonth)
+            )
+            .map(item => toRowItem(
+                item,
+                'paused',
+                Math.min(item.dayOfMonth, daysInMonth),
+                budget.year,
+                budget.month,
+                todayKey,
+            ));
 
-    const handleDelete = (subscription: Subscription) => {
+        return [
+            ...(upcoming.length ? [{key: 'upcoming' as const, title: 'À VENIR', data: upcoming}] : []),
+            ...(debited.length ? [{key: 'debited' as const, title: 'PRÉLEVÉS', data: debited}] : []),
+            ...(paused.length
+                ? [{
+                    key: 'paused' as const,
+                    title: `EN PAUSE (${paused.length})`,
+                    data: pausedExpanded ? paused : [],
+                }]
+                : []),
+        ];
+    }, [budget, todayKey, pausedExpanded]);
+
+    const firstItemId = sections.find(section => section.key !== 'paused')?.data[0]?.id ?? null;
+
+    useEffect(() => {
+        if (!firstItemId) return;
+
+        db.execSync('CREATE TABLE IF NOT EXISTS app_ui_flags (flag TEXT PRIMARY KEY, value TEXT NOT NULL)');
+        const flag = db.getFirstSync<{value: string}>(
+            'SELECT value FROM app_ui_flags WHERE flag = ?',
+            [SWIPE_HINT_FLAG],
+        );
+        if (flag) return;
+
+        db.runSync('INSERT INTO app_ui_flags (flag, value) VALUES (?, ?)', [SWIPE_HINT_FLAG, '1']);
+        const timer = setTimeout(() => setPreviewItemId(firstItemId), 0);
+        return () => clearTimeout(timer);
+    }, [firstItemId]);
+
+    const confirmDelete = (subscription: Subscription) => {
         if (!budget) return;
-
         Alert.alert(
-            'Supprimer l’abonnement',
+            'Supprimer le prélèvement',
             `Supprimer "${subscription.label}" ?`,
             [
                 {text: 'Annuler', style: 'cancel'},
@@ -63,87 +157,52 @@ export default function SubscriptionsScreen() {
                     style: 'destructive',
                     onPress: () => deleteSubscription(budget.id, subscription.id),
                 },
-            ]
+            ],
         );
     };
 
-    const renderItem = ({item}: { item: Subscription }) => {
-        const effectiveDay = budget
-            ? Math.min(item.dayOfMonth, getDaysInMonth(budget.year, budget.month))
-            : item.dayOfMonth;
-        const isPast = item.isActive && effectiveDay <= billingDay;
-        const isUpcoming = item.isActive && !isPast;
-
-        return (
-        <View
-            style={[
-                styles.row,
-                item.isActive ? (isPast ? styles.rowPast : styles.rowUpcoming) : styles.rowInactive,
-            ]}
-        >
-            <View style={styles.rowMain}>
-                <View
-                    style={[
-                        styles.dayBadge,
-                        isPast && styles.dayBadgePast,
-                        isUpcoming && styles.dayBadgeUpcoming,
-                    ]}
-                >
-                    <Text style={styles.dayValue}>{item.dayOfMonth}</Text>
-                </View>
-
-                <View style={styles.info}>
-                    <Text style={styles.label}>{item.label}</Text>
-                </View>
-
-                <View
-                    style={[
-                        styles.amountWrap,
-                        isPast && styles.amountWrapPast,
-                        isUpcoming && styles.amountWrapUpcoming,
-                    ]}
-                >
-                    <View
-                        style={[
-                            styles.stateDot,
-                            isPast ? styles.stateDotPast : styles.stateDotUpcoming,
-                            !item.isActive && styles.stateDotInactive,
-                        ]}
-                    />
-                    <Text style={[styles.amount, isUpcoming && styles.amountUpcoming]}>{formatCurrency(item.amount)}</Text>
-                </View>
-            </View>
-
-            <View style={styles.actionsRow}>
-                <TouchableOpacity
-                    style={[styles.actionBtn, styles.editBtn]}
-                    onPress={() => router.push({
-                        pathname: '/add-subscription' as any,
-                        params: {subscriptionId: item.id},
-                    })}
-                >
-                    <Text style={styles.actionText}>Modifier</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[styles.actionBtn, item.isActive ? styles.pauseBtn : styles.activateBtn]}
-                    onPress={() => budget && toggleSubscription(budget.id, item.id)}
-                >
-                    <Text style={styles.actionText}>{item.isActive ? 'Mettre en pause' : 'Réactiver'}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[styles.actionBtn, styles.deleteBtn]}
-                    onPress={() => handleDelete(item)}
-                >
-                    <Text style={styles.deleteText}>Supprimer</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+    const editSubscription = (subscriptionId: string) => {
+        router.push({
+            pathname: '/add-subscription' as any,
+            params: {subscriptionId},
+        });
     };
 
+    const renderItem = ({item}: {item: SubscriptionRowItem}) => {
+        const subscription = budget?.subscriptions.find(entry => entry.id === item.id);
+        if (!budget || !subscription) return null;
+
+        return (
+            <SwipeableSubscriptionRow
+                item={item}
+                previewSwipe={item.id === previewItemId}
+                onEdit={() => editSubscription(item.id)}
+                onToggle={() => toggleSubscription(budget.id, item.id)}
+                onDelete={() => confirmDelete(subscription)}
+            />
+        );
+    };
+
+    const renderSectionHeader = ({section}: {section: SubscriptionSection}) => (
+        section.key === 'paused' ? (
+            <Pressable
+                style={styles.sectionHeader}
+                onPress={() => setPausedExpanded(expanded => !expanded)}
+                accessibilityRole="button"
+                accessibilityState={{expanded: pausedExpanded}}
+            >
+                <Text style={styles.sectionTitle}>{section.title}</Text>
+                <Text style={styles.sectionToggle}>{pausedExpanded ? 'Masquer' : 'Afficher'}</Text>
+            </Pressable>
+        ) : (
+            <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>{section.title}</Text>
+            </View>
+        )
+    );
+
     return (
+        <GestureHandlerRootView style={styles.root}>
         <View style={[styles.root, {paddingTop: insets.top}]}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => router.back()}>
@@ -155,33 +214,52 @@ export default function SubscriptionsScreen() {
             </View>
 
             <View style={styles.hero}>
-                <Text style={styles.title}>Abonnements mensuels</Text>
-                <View style={styles.totalBadge}>
-                    <Text style={styles.totalValue}>{formatCurrency(monthlyTotal, {compact: true})}</Text>
-                </View>
+                <Text style={styles.title}>
+                    Prélèvements de {budget ? MONTHS[budget.month - 1] : 'ce mois'}
+                </Text>
+            </View>
+            <View style={styles.summary}>
+                <Text style={styles.summarySecondary}>{formatCurrency(monthlyTotal, {compact: true})} ce mois</Text>
+                <Text style={styles.summarySeparator}>·</Text>
+                {upcomingTotal > 0 ? (
+                    <Text style={styles.summaryAccent}>{formatCurrency(upcomingTotal, {compact: true})} à venir</Text>
+                ) : (
+                    <Text style={styles.summarySecondary}>tout est prélevé</Text>
+                )}
             </View>
 
-            <FlatList
-                data={subscriptions}
+            <SectionList
+                sections={sections}
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContent}
                 showsVerticalScrollIndicator={false}
                 renderItem={renderItem}
+                renderSectionHeader={renderSectionHeader}
+                stickySectionHeadersEnabled={false}
                 ListEmptyComponent={
                     <View style={styles.emptyWrap}>
-                        <Text style={styles.emptyTitle}>Aucun abonnement pour l’instant</Text>
-                        <Text style={styles.emptyText}>
-                            Ajoute tes prélèvements récurrents pour voir leur impact sur ton budget du mois.
+                        <Text style={styles.emptyTitle}>
+                            {budget?.subscriptions.length
+                                ? 'Aucun prélèvement prévu pour ce mois'
+                                : 'Aucun prélèvement pour l’instant'}
                         </Text>
-                        <TouchableOpacity
-                            style={styles.emptyCta}
-                            onPress={() => router.push('/add-subscription' as any)}
-                        >
-                            <Text style={styles.emptyCtaText}>Ajouter un abonnement</Text>
-                        </TouchableOpacity>
+                        <Text style={styles.emptyText}>
+                            {budget?.subscriptions.length
+                                ? 'Tes prélèvements actifs ne tombent pas ce mois-ci.'
+                                : 'Ajoute tes prélèvements récurrents pour voir leur impact sur ton budget du mois.'}
+                        </Text>
+                        {!budget?.subscriptions.length && (
+                            <TouchableOpacity
+                                style={styles.emptyCta}
+                                onPress={() => router.push('/add-subscription' as any)}
+                            >
+                                <Text style={styles.emptyCtaText}>Ajouter un prélèvement</Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
                 }
             />
         </View>
+        </GestureHandlerRootView>
     );
 }

@@ -24,167 +24,159 @@ export const styles = StyleSheet.create({
         color: colors.accent,
     },
     hero: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
         paddingHorizontal: spacing.md,
-        paddingBottom: spacing.md,
-        gap: spacing.md,
+        paddingBottom: spacing.xs,
     },
     title: {
-        flex: 1,
         fontFamily: fonts.extraBold,
         fontSize: fontSize.xxl,
         color: colors.text,
         letterSpacing: -0.4,
     },
-    totalBadge: {
-        backgroundColor: colors.accentDim,
-        borderRadius: radius.full,
+    summary: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.xs,
         paddingHorizontal: spacing.md,
-        paddingVertical: spacing.sm,
-        borderWidth: 1,
-        borderColor: 'rgba(110,231,183,0.14)',
-        flexShrink: 0,
+        paddingBottom: spacing.md,
     },
-    totalValue: {
+    summarySecondary: {
+        fontFamily: fonts.medium,
+        fontSize: fontSize.sm,
+        color: colors.textSoft,
+    },
+    summarySeparator: {
+        fontFamily: fonts.regular,
+        fontSize: fontSize.sm,
+        color: colors.textMuted,
+    },
+    summaryAccent: {
         fontFamily: fonts.bold,
-        fontSize: fontSize.md,
+        fontSize: fontSize.sm,
         color: colors.accent,
-        fontVariant: ['tabular-nums'],
     },
     listContent: {
-        padding: spacing.md,
+        paddingHorizontal: spacing.md,
         paddingBottom: spacing.xl,
         gap: spacing.sm,
     },
-    row: {
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingTop: spacing.md,
+        paddingBottom: spacing.sm,
+    },
+    sectionTitle: {
+        fontFamily: fonts.bold,
+        fontSize: fontSize.sm,
+        color: colors.textMuted,
+        textTransform: 'uppercase',
+        letterSpacing: 0.8,
+    },
+    sectionToggle: {
+        fontFamily: fonts.medium,
+        fontSize: fontSize.xs,
+        color: colors.textSoft,
+    },
+    swipeContainer: {
+        minHeight: spacing.xl * 2,
+        justifyContent: 'center',
+        marginBottom: spacing.sm,
+        borderRadius: radius.lg,
+        overflow: 'hidden',
+    },
+    swipeActions: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        flexDirection: 'row',
+        width: spacing.xl * 5,
+    },
+    swipePauseAction: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: spacing.xs,
+        backgroundColor: colors.surface3,
+    },
+    swipeDeleteAction: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: spacing.xs,
+        backgroundColor: colors.danger,
+    },
+    swipeActionText: {
+        fontFamily: fonts.bold,
+        fontSize: fontSize.xs,
+        color: colors.text,
+        textAlign: 'center',
+    },
+    subscriptionRow: {
         backgroundColor: colors.surface,
         borderRadius: radius.lg,
         borderWidth: 1,
         borderColor: colors.border,
-        padding: spacing.md,
-        gap: spacing.md,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
     },
-    rowPast: {
-        borderColor: 'rgba(110,231,183,0.16)',
-    },
-    rowUpcoming: {
-        borderColor: 'rgba(251,146,60,0.2)',
-    },
-    rowInactive: {
-        opacity: 0.55,
-    },
-    rowMain: {
+    rowPressable: {
+        minHeight: spacing.xl * 1.5,
         flexDirection: 'row',
         alignItems: 'center',
         gap: spacing.md,
     },
     dayBadge: {
-        width: 58,
-        height: 58,
+        width: spacing.xl * 1.5,
+        height: spacing.xl * 1.5,
         borderRadius: radius.md,
         backgroundColor: colors.surface2,
         alignItems: 'center',
         justifyContent: 'center',
     },
-    dayBadgePast: {
+    dayBadgeUpcoming: {
         backgroundColor: colors.accentDim,
     },
-    dayBadgeUpcoming: {
-        backgroundColor: colors.orangeDim,
-    },
     dayValue: {
-        fontFamily: fonts.extraBold,
-        fontSize: fontSize.xl,
-        color: colors.text,
+        fontFamily: fonts.bold,
+        fontSize: fontSize.lg,
+        color: colors.textSoft,
         fontVariant: ['tabular-nums'],
+    },
+    dayValueUpcoming: {
+        color: colors.accent,
     },
     info: {
         flex: 1,
     },
     label: {
         fontFamily: fonts.bold,
-        fontSize: fontSize.lg,
+        fontSize: fontSize.md,
         color: colors.text,
     },
-    amountWrap: {
-        backgroundColor: colors.surface2,
-        borderRadius: radius.md,
-        paddingHorizontal: spacing.sm,
-        paddingVertical: spacing.xs,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing.xs,
+    inactiveText: {
+        color: colors.textSoft,
+        opacity: 0.7,
     },
-    amountWrapPast: {
-        backgroundColor: colors.accentDim,
+    secondaryText: {
+        fontFamily: fonts.regular,
+        fontSize: fontSize.xs,
+        color: colors.textMuted,
+        marginTop: spacing.xs,
     },
-    amountWrapUpcoming: {
-        backgroundColor: colors.orangeDim,
+    frequency: {
+        fontFamily: fonts.regular,
+        fontSize: fontSize.xs,
+        color: colors.textMuted,
+        marginTop: spacing.xs,
     },
     amount: {
         fontFamily: fonts.bold,
         fontSize: fontSize.md,
-        color: colors.accent,
-        fontVariant: ['tabular-nums'],
-    },
-    amountUpcoming: {
-        color: colors.warning,
-    },
-    stateDot: {
-        width: 7,
-        height: 7,
-        borderRadius: radius.full,
-    },
-    stateDotPast: {
-        backgroundColor: colors.accent,
-    },
-    stateDotUpcoming: {
-        backgroundColor: colors.warning,
-    },
-    stateDotInactive: {
-        backgroundColor: colors.textMuted,
-    },
-    actionsRow: {
-        flexDirection: 'row',
-        gap: spacing.sm,
-        flexWrap: 'wrap',
-    },
-    actionBtn: {
-        flex: 1,
-        minWidth: 96,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: radius.md,
-        paddingVertical: spacing.sm,
-        borderWidth: 1,
-    },
-    editBtn: {
-        backgroundColor: colors.surface2,
-        borderColor: colors.border,
-    },
-    pauseBtn: {
-        backgroundColor: colors.surface2,
-        borderColor: colors.border,
-    },
-    activateBtn: {
-        backgroundColor: colors.accentDim,
-        borderColor: 'transparent',
-    },
-    actionText: {
-        fontFamily: fonts.medium,
-        fontSize: fontSize.sm,
         color: colors.text,
-    },
-    deleteBtn: {
-        backgroundColor: colors.dangerDim,
-        borderColor: 'transparent',
-    },
-    deleteText: {
-        fontFamily: fonts.medium,
-        fontSize: fontSize.sm,
-        color: colors.danger,
+        fontVariant: ['tabular-nums'],
     },
     emptyWrap: {
         alignItems: 'center',
@@ -215,6 +207,6 @@ export const styles = StyleSheet.create({
     emptyCtaText: {
         fontFamily: fonts.bold,
         fontSize: fontSize.md,
-        color: '#0d2e22',
+        color: colors.bg,
     },
 });

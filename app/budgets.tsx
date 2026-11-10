@@ -13,15 +13,18 @@ import { MONTHS } from '@/constants/months';
 import { formatCurrency } from '@/utils/currency';
 import { styles } from './budgets.styles';
 import { Budget } from '@/domain/entities/Budget';
+import {getSubscriptionsForMonth} from '@/utils/subscriptionSchedule';
 const getBudgetSortValue = (budget: Budget) => (budget.year * 100) + budget.month;
 export default function BudgetsScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
     const budgets = useBudgetStore(state => state.budgets);
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
+    const todayKey = useBudgetStore(state => state.today);
     const setActiveBudget = useBudgetStore(state => state.setActiveBudget);
     const deleteBudget = useBudgetStore(state => state.deleteBudget);
-    const getDebitedSubscriptionsTotal = useBudgetStore(state => state.getDebitedSubscriptionsTotal);
+    const [todayYear, todayMonth, todayDay] = todayKey.split('-').map(Number);
+    const today = new Date(todayYear, todayMonth - 1, todayDay);
     const orderedBudgets = useMemo(
         () => [...budgets].sort((a, b) => getBudgetSortValue(b) - getBudgetSortValue(a)),
         [budgets],
@@ -50,7 +53,14 @@ export default function BudgetsScreen() {
     };
     const renderItem = ({ item }: { item: Budget }) => {
         const spent = item.expenses.reduce((sum, expense) => sum + expense.amount, 0);
-        const debitedSubscriptions = getDebitedSubscriptionsTotal(item.id);
+        const debitedSubscriptions = getSubscriptionsForMonth(
+            item.subscriptions ?? [],
+            item.year,
+            item.month,
+            today,
+        )
+            .filter(subscription => subscription.status === 'debited')
+            .reduce((sum, subscription) => sum + subscription.amount, 0);
         const availableNow = item.totalAmount - spent - debitedSubscriptions;
         const isActive = item.id === activeBudgetId;
         return (

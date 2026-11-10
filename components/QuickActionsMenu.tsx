@@ -7,7 +7,6 @@ interface QuickActionsMenuProps {
     onClose: () => void;
     onOpenBudgets: () => void;
     onOpenSubscriptions: () => void;
-    onOpenCurrentBudget: () => void;
 }
 
 const itemBase = {
@@ -27,7 +26,6 @@ export default function QuickActionsMenu({
     onClose,
     onOpenBudgets,
     onOpenSubscriptions,
-    onOpenCurrentBudget,
 }: QuickActionsMenuProps) {
     return (
         <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
@@ -73,18 +71,8 @@ export default function QuickActionsMenu({
                         <Text style={labelStyle}>Prélèvements</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
-                        style={itemBase}
-                        onPress={() => {
-                            onClose();
-                            onOpenCurrentBudget();
-                        }}
-                    >
-                        <Text style={labelStyle}>Budget du mois</Text>
-                    </TouchableOpacity>
                 </Pressable>
             </Pressable>
         </Modal>
     );
 }
-

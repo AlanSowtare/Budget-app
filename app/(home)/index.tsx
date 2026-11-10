@@ -11,6 +11,7 @@ import {useBudgetStore} from '@/store/budgetStore';
 import {colors} from '@/constants/theme';
 import {styles} from './index.styles';
 import {subscriptionCardStyles} from './subscription-card.styles';
+import {getSubscriptionsForMonth} from '@/utils/subscriptionSchedule';
 import {Category} from '@/domain/entities/Budget';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {MONTHS} from "@/constants/months";
@@ -54,11 +55,26 @@ export default function HomeScreen() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const budgets = useBudgetStore(state => state.budgets);
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
+    const todayKey = useBudgetStore(state => state.today);
+    const createCurrentMonthBudget = useBudgetStore(state => state.createCurrentMonthBudget);
     const budget = budgets.find(b => b.id === activeBudgetId) ?? null;
+    const currentMonthBudgetExists = budgets.some(
+        item => item.year === Number(todayKey.slice(0, 4)) && item.month === Number(todayKey.slice(5, 7))
+    );
+    const isDisplayedMonthPast = budget !== null &&
+        (budget.year < Number(todayKey.slice(0, 4)) ||
+            (budget.year === Number(todayKey.slice(0, 4)) && budget.month < Number(todayKey.slice(5, 7))));
+    const monthlySubscriptions = useBudgetStore(state =>
+        activeBudgetId ? state.getMonthlySubscriptionsTotal(activeBudgetId) : 0
+    );
+    const debitedSubscriptions = useBudgetStore(state =>
+        state.activeBudgetId ? state.getDebitedSubscriptionsTotal(state.activeBudgetId) : 0
+    );
+    const upcomingSubscriptions = useBudgetStore(state =>
+        state.activeBudgetId ? state.getRemainingSubscriptionsTotal(state.activeBudgetId) : 0
+    );
 
     const deleteCategory = useBudgetStore(state => state.deleteCategory);
-    const getDebitedSubscriptionsTotal = useBudgetStore(state => state.getDebitedSubscriptionsTotal);
-    const getRemainingSubscriptionsTotal = useBudgetStore(state => state.getRemainingSubscriptionsTotal);
 
     const insets = useSafeAreaInsets();
 
@@ -71,17 +87,16 @@ export default function HomeScreen() {
         // expense = élément courant
     }, [budget]);
 
-    const debitedSubscriptions = budget
-        ? getDebitedSubscriptionsTotal(budget.id)
-        : 0;
-
-    const upcomingSubscriptions = budget
-        ? getRemainingSubscriptionsTotal(budget.id)
-        : 0;
+    const [todayYear, todayMonth, todayDay] = todayKey.split('-').map(Number);
+    const today = new Date(todayYear, todayMonth - 1, todayDay);
+    const nextSubscription = budget
+        ? getSubscriptionsForMonth(budget.subscriptions ?? [], budget.year, budget.month, today)
+            .filter(subscription => subscription.status === 'upcoming')
+            .sort((a, b) => a.effectiveDay - b.effectiveDay)[0] ?? null
+        : null;
 
     const currentAvailable = (budget?.totalAmount ?? 0) - totalSpent - debitedSubscriptions;
-    const estimatedAvailable = currentAvailable - upcomingSubscriptions;
-    const totalConsumed = totalSpent + debitedSubscriptions;
+    const estimatedAvailable = (budget?.totalAmount ?? 0) - totalSpent - monthlySubscriptions;
 
     const progressPercent = budget && budget.totalAmount > 0
         ? Math.max((currentAvailable / budget.totalAmount) * 100, 0)
@@ -200,12 +215,33 @@ export default function HomeScreen() {
         <View style={[styles.root, {paddingTop: insets.top}]}>
 
             {/* ── HEADER ── */}
+            {!currentMonthBudgetExists && (
+                <View style={styles.createMonthBanner}>
+                    <Text style={styles.createMonthText}>
+                        Le budget de {MONTHS[todayMonth - 1].toLowerCase()} n’existe pas encore
+                    </Text>
+                    <TouchableOpacity
+                        style={styles.createMonthButton}
+                        onPress={createCurrentMonthBudget}
+                    >
+                        <Text style={styles.createMonthButtonText}>Créer</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+
             <View style={styles.header}>
                 <View>
-                    <Text style={styles.greeting}>Bonjour 👋</Text>
-                    <Text style={styles.monthTitle}>
-                        {MONTHS[(budget?.month ?? 1) - 1]} {budget?.year}
-                    </Text>
+                    <Text style={styles.greeting}>{budget?.year ?? todayYear}</Text>
+                    <View style={styles.monthHeading}>
+                        <Text style={styles.monthTitle}>
+                            {MONTHS[(budget?.month ?? todayMonth) - 1]}
+                        </Text>
+                        {isDisplayedMonthPast && (
+                            <View style={styles.pastMonthBadge}>
+                                <Text style={styles.pastMonthBadgeText}>Mois passé</Text>
+                            </View>
+                        )}
+                    </View>
                 </View>
                 <TouchableOpacity
                     style={styles.menuBtn}
@@ -222,7 +258,6 @@ export default function HomeScreen() {
                 onClose={() => setIsMenuOpen(false)}
                 onOpenBudgets={() => router.push('/budgets' as any)}
                 onOpenSubscriptions={() => router.push('/subscriptions' as any)}
-                onOpenCurrentBudget={() => router.push('/edit-budget' as any)}
             />
 
             <FlatList
@@ -247,7 +282,7 @@ export default function HomeScreen() {
                             {/* Carte budget global */}
                             <View style={styles.budgetCard}>
                                 <View style={styles.budgetTopRow}>
-                                    <Text style={styles.budgetLabel}>Disponible maintenant</Text>
+                                    <Text style={styles.budgetLabel}>RESTE À DÉPENSER</Text>
                                     <View
                                         style={[
                                             styles.statusBadge,
@@ -258,16 +293,22 @@ export default function HomeScreen() {
                                     </View>
                                 </View>
                                 <Text style={styles.budgetAmount}>
-                                    {formatCurrency(currentAvailable, {compact: true, showCurrency: false})} <Text style={styles.budgetCurrency}>€</Text>
+                                    {formatCurrency(estimatedAvailable, {compact: true, showCurrency: false})} <Text style={styles.budgetCurrency}>€</Text>
                                 </Text>
+                                <Text style={styles.currentBalance}>
+                                    <Text style={styles.currentBalanceLabel}>Solde actuel </Text>
+                                    <Text style={styles.currentBalanceValue}>
+                                        {formatCurrency(currentAvailable, {compact: true})}
+                                    </Text>
+                                </Text>
+                                {nextSubscription ? (
+                                    <Text style={styles.nextSubscriptionText}>
+                                        Prochain : {nextSubscription.label} · {formatCurrency(nextSubscription.amount)} · le {nextSubscription.effectiveDay}
+                                    </Text>
+                                ) : null}
 
                                 {/* Barre de progression globale */}
                                 <View style={styles.progressWrap}>
-                                    <View style={styles.progressHeader}>
-                                        <Text style={styles.progressValue}>
-                                            {formatCurrency(totalConsumed, {compact: true})} / {formatCurrency(budget?.totalAmount ?? 0, {compact: true})}
-                                        </Text>
-                                    </View>
                                     <View style={styles.progressTrack}>
                                         <View style={[
                                             styles.progressFill,
@@ -276,26 +317,6 @@ export default function HomeScreen() {
                                                 backgroundColor: progressColor,
                                             }
                                         ]}/>
-                                    </View>
-                                </View>
-
-                                {/* Stats dépensé / restant */}
-                                <View style={styles.statsRow}>
-                                    <View style={styles.statBox}>
-                                        <Text style={styles.statLabel}>Disponible estimé</Text>
-                                        <Text
-                                            style={[
-                                                styles.statValue,
-                                                styles.statValueEmphasis,
-                                                {color: budgetHealth.color},
-                                            ]}
-                                        >
-                                            {formatCurrency(estimatedAvailable, {compact: true})}
-                                        </Text>
-                                    </View>
-                                    <View style={styles.statBox}>
-                                        <Text style={styles.statLabel}>Budget du mois</Text>
-                                        <Text style={styles.statValue}>{formatCurrency(budget?.totalAmount ?? 0, {compact: true})}</Text>
                                     </View>
                                 </View>
 
@@ -312,7 +333,7 @@ export default function HomeScreen() {
                 }
 
                 // ── FOOTER ──
-                // Carte abonnements + bouton catégorie en bas de liste
+                // Carte des prélèvements + bouton catégorie en bas de liste
                 ListFooterComponent={
                     <View>
                         <TouchableOpacity
@@ -322,7 +343,7 @@ export default function HomeScreen() {
                         >
                             <View style={subscriptionCardStyles.header}>
                                 <View>
-                                    <Text style={subscriptionCardStyles.eyebrow}>Abonnements</Text>
+                                    <Text style={subscriptionCardStyles.eyebrow}>Prélèvements</Text>
                                     <Text style={subscriptionCardStyles.title}>Charges à venir</Text>
                                 </View>
                                 <Text style={subscriptionCardStyles.link}>Voir tout</Text>
@@ -336,7 +357,7 @@ export default function HomeScreen() {
                                 style={subscriptionCardStyles.addBtn}
                                 onPress={() => router.push('/add-subscription' as any)}
                             >
-                                <Text style={subscriptionCardStyles.addBtnText}>＋ Ajouter un abonnement</Text>
+                                <Text style={subscriptionCardStyles.addBtnText}>＋ Ajouter un prélèvement</Text>
                             </TouchableOpacity>
                         </TouchableOpacity>
 

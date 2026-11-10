@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import {AppState} from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
@@ -19,6 +20,7 @@ export default function RootLayout() {
 
     const loadBudgets = useBudgetStore(state => state.loadBudgets);
     const isLoading = useBudgetStore(state => state.isLoading);
+    const refreshToday = useBudgetStore(state => state.refreshToday);
 
     useEffect(() => {
         if (fontsLoaded) {
@@ -28,12 +30,19 @@ export default function RootLayout() {
         }
     }, [fontsLoaded, loadBudgets]);
 
+    useEffect(() => {
+        const subscription = AppState.addEventListener('change', state => {
+            if (state === 'active') refreshToday();
+        });
+        return () => subscription.remove();
+    }, [refreshToday]);
+
     if (!fontsLoaded || isLoading) return null;
 
     return (
         <SafeAreaProvider>
             <>
-                <StatusBar style="light" />
+                <StatusBar style="dark" />
                 <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="index" />
                     <Stack.Screen name="onboarding" />

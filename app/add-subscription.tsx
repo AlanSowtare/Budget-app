@@ -11,8 +11,17 @@ import {
 import {useLocalSearchParams, useRouter} from 'expo-router';
 import {useBudgetStore} from '@/store/budgetStore';
 import {colors} from '@/constants/theme';
+import {MONTHS} from '@/constants/months';
 import {styles} from './add-subscription.styles';
 import StepperInput from '@/components/StepperInput';
+import {Subscription} from '@/domain/entities/Budget';
+
+const frequencies: {value: Subscription['frequency']; label: string}[] = [
+    {value: 'monthly', label: 'Mensuel'},
+    {value: 'quarterly', label: 'Trimestriel'},
+    {value: 'semiannual', label: 'Semestriel'},
+    {value: 'annual', label: 'Annuel'},
+];
 
 export default function AddSubscription() {
     const router = useRouter();
@@ -20,9 +29,10 @@ export default function AddSubscription() {
 
     const addSubscription = useBudgetStore(state => state.addSubscription);
     const updateSubscription = useBudgetStore(state => state.updateSubscription);
-    const getActiveBudget = useBudgetStore(state => state.getActiveBudget);
+    const budgets = useBudgetStore(state => state.budgets);
+    const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
 
-    const budget = getActiveBudget();
+    const budget = budgets.find(item => item.id === activeBudgetId) ?? null;
     const existingSubscription = useMemo(
         () => budget?.subscriptions.find(subscription => subscription.id === subscriptionId) ?? null,
         [budget, subscriptionId]
@@ -33,6 +43,9 @@ export default function AddSubscription() {
     const [label, setLabel] = useState(existingSubscription?.label ?? '');
     const [amount, setAmount] = useState(existingSubscription ? String(existingSubscription.amount) : '');
     const [dayOfMonth, setDayOfMonth] = useState(existingSubscription?.dayOfMonth ?? 5);
+    const [frequency, setFrequency] = useState<Subscription['frequency']>(existingSubscription?.frequency ?? 'monthly');
+    const [startMonth, setStartMonth] = useState(existingSubscription?.startMonth ?? new Date().getMonth() + 1);
+    const [startYear] = useState(existingSubscription?.startYear ?? new Date().getFullYear());
 
     const isValid = () => {
         const amountNum = parseFloat(amount.replace(',', '.'));
@@ -46,6 +59,9 @@ export default function AddSubscription() {
             label: label.trim(),
             amount: parseFloat(amount.replace(',', '.')),
             dayOfMonth,
+            frequency,
+            startMonth: !isEditMode && frequency === 'monthly' ? budget.month : startMonth,
+            startYear: !isEditMode && frequency === 'monthly' ? budget.year : startYear,
         };
 
         if (isEditMode && existingSubscription) {
@@ -68,16 +84,16 @@ export default function AddSubscription() {
                 contentContainerStyle={styles.scroll}
                 keyboardShouldPersistTaps="handled"
             >
-                <Text style={styles.title}>{isEditMode ? 'Modifier l’abonnement' : 'Nouvel abonnement'}</Text>
+                <Text style={styles.title}>{isEditMode ? 'Modifier le prélèvement' : 'Nouveau prélèvement'}</Text>
                 <Text style={styles.subtitle}>
                     {isEditMode
-                        ? 'Ajuste le montant, le libellé ou le jour de prélèvement quand ton abonnement change.'
+                        ? 'Ajuste le montant, le libellé ou la date du prélèvement.'
                         : 'Ajoute un prélèvement récurrent pour mieux anticiper ton budget mensuel.'}
                 </Text>
 
                 <View style={styles.sectionCard}>
                     <View style={styles.field}>
-                        <Text style={styles.label}>Montant mensuel</Text>
+                        <Text style={styles.label}>Montant du prélèvement</Text>
                         <View style={styles.amountDisplay}>
                             <Text style={styles.currency}>€</Text>
                             <TextInput
@@ -103,6 +119,42 @@ export default function AddSubscription() {
                         />
                     </View>
 
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Fréquence</Text>
+                        <View style={styles.frequencyOptions}>
+                            {frequencies.map(option => (
+                                <TouchableOpacity
+                                    key={option.value}
+                                    style={[
+                                        styles.frequencyOption,
+                                        frequency === option.value && styles.frequencyOptionSelected,
+                                    ]}
+                                    onPress={() => setFrequency(option.value)}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.frequencyOptionText,
+                                            frequency === option.value && styles.frequencyOptionTextSelected,
+                                        ]}
+                                    >
+                                        {option.label}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+
+                    {frequency !== 'monthly' && (
+                        <StepperInput
+                            label="Mois de début"
+                            value={startMonth}
+                            min={1}
+                            max={12}
+                            onChange={setStartMonth}
+                            displayValue={MONTHS[startMonth - 1]}
+                        />
+                    )}
+
                     <StepperInput
                         label="Date de prélèvement"
                         value={dayOfMonth}
@@ -126,7 +178,7 @@ export default function AddSubscription() {
                     disabled={!isValid()}
                 >
                     <Text style={styles.buttonText}>
-                        {isEditMode ? 'Enregistrer les modifications' : 'Ajouter l’abonnement'}
+                        {isEditMode ? 'Enregistrer les modifications' : 'Ajouter le prélèvement'}
                     </Text>
                 </TouchableOpacity>
             </ScrollView>

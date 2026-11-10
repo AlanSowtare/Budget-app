@@ -1,12 +1,15 @@
 import * as SQLite from 'expo-sqlite';
 import {IBudgetRepository} from "@/repositories/IBudgetRepository";
 import {Budget} from "@/domain/entities/Budget";
+import {normalizeSubscription} from "@/utils/normalizeSubscription";
 
 const db = SQLite.openDatabaseSync('budget.db');
 
 const normalizeBudget = (budget: Budget): Budget => ({
     ...budget,
-    subscriptions: budget.subscriptions ?? [],
+    subscriptions: (budget.subscriptions ?? []).map(subscription =>
+        normalizeSubscription(subscription, budget.month, budget.year)
+    ),
 });
 
 export class SQLiteBudgetRepository implements IBudgetRepository {
