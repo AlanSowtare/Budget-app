@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { colors, fontSize, fonts, radius, spacing } from '@/constants/theme';
-export const styles = StyleSheet.create({
+import {ThemeColors, fontSize, fonts, radius, spacing} from '@/constants/theme';
+
+export const makeStyles = (colors: ThemeColors) => StyleSheet.create({
     root: {
         flex: 1,
         backgroundColor: colors.bg,
@@ -81,7 +82,7 @@ export const styles = StyleSheet.create({
         opacity: 0.45,
     },
     buttonText: {
-        color: '#0b0d12',
+        color: colors.onLight,
         fontFamily: fonts.bold,
         fontSize: fontSize.md,
     },

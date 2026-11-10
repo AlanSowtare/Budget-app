@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useMemo, useState} from 'react';
 import {
     View,
     Text,
@@ -10,17 +10,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useBudgetStore } from '@/store/budgetStore';
-import { colors } from '@/constants/theme';
-import { styles } from './add-category.styles';
-
-// Les couleurs disponibles pour une catégorie
-const COLORS: { key: string; base: string }[] = [
-    { key: 'blue',   base: colors.blue },
-    { key: 'purple', base: colors.purple },
-    { key: 'orange', base: colors.orange },
-    { key: 'pink',   base: colors.pink },
-    { key: 'danger', base: colors.danger },
-];
+import {useTheme} from '@/hooks/useTheme';
+import {makeStyles} from './add-category.styles';
 
 // Emojis suggérés
 const EMOJIS = [
@@ -31,6 +22,15 @@ const EMOJIS = [
 export default function AddCategory() {
 
     const router = useRouter();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
+    const categoryColors = [
+        {key: 'blue', base: colors.blue},
+        {key: 'purple', base: colors.purple},
+        {key: 'orange', base: colors.orange},
+        {key: 'pink', base: colors.pink},
+        {key: 'danger', base: colors.danger},
+    ];
     const addCategory = useBudgetStore(state => state.addCategory);
     const getActiveBudget = useBudgetStore(state => state.getActiveBudget);
 
@@ -131,7 +131,7 @@ export default function AddCategory() {
                     <View style={styles.field}>
                         <Text style={styles.label}>Couleur</Text>
                         <View style={styles.colorRow}>
-                            {COLORS.map(color => (
+                            {categoryColors.map(color => (
                                 <TouchableOpacity
                                     key={color.key}
                                     style={[

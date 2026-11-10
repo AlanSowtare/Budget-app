@@ -6,6 +6,7 @@ export type ThemeColors = {
   surfaceRaised: string;
   surfaceRaisedStrong: string;
   border: string;
+  borderSubtle: string;
   borderStrong: string;
   text: string;
   textMuted: string;
@@ -40,6 +41,7 @@ const dark: ThemeColors = {
   surfaceRaised: '#202535',
   surfaceRaisedStrong: '#232838',
   border: 'rgba(255,255,255,0.06)',
+  borderSubtle: 'rgba(255,255,255,0.05)',
   borderStrong: 'rgba(255,255,255,0.08)',
   text: '#f0f2f8',
   textMuted: '#6b7280',
@@ -68,6 +70,7 @@ const light: ThemeColors = {
   surfaceRaised: '#e8ecf2',
   surfaceRaisedStrong: '#dde3eb',
   border: 'rgba(15,23,42,0.08)',
+  borderSubtle: 'rgba(15,23,42,0.05)',
   borderStrong: 'rgba(15,23,42,0.14)',
   text: '#171923',
   textMuted: '#5f6877',

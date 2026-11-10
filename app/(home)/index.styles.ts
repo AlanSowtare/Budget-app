@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
+import {ThemeColors, spacing, radius, fontSize, fonts} from '@/constants/theme';
 
-export const styles = StyleSheet.create({
+export const makeStyles = (colors: ThemeColors) => StyleSheet.create({
 
     root: {
         flex: 1,
@@ -107,8 +107,8 @@ export const styles = StyleSheet.create({
         borderRadius: radius.xl,
         padding: spacing.xl,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
-        shadowColor: '#000',
+        borderColor: colors.borderStrong,
+        shadowColor: colors.shadow,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.22,
         shadowRadius: 20,
@@ -223,11 +223,11 @@ export const styles = StyleSheet.create({
     },
     statBox: {
         flex: 1,
-        backgroundColor: '#202535',
+        backgroundColor: colors.surfaceRaised,
         borderRadius: radius.lg,
         padding: spacing.md,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.05)',
+        borderColor: colors.borderSubtle,
     },
     statLabel: {
         fontFamily: fonts.regular,
@@ -275,10 +275,10 @@ export const styles = StyleSheet.create({
         borderRadius: radius.xl,
         padding: spacing.md,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.06)',
+        borderColor: colors.border,
         overflow: 'hidden',
         gap: 4,
-        shadowColor: '#000',
+        shadowColor: colors.shadow,
         shadowOffset: { width: 0, height: 8 },
         shadowOpacity: 0.14,
         shadowRadius: 16,
@@ -345,7 +345,7 @@ export const styles = StyleSheet.create({
     },
     catProgressTrack: {
         height: 4,
-        backgroundColor: '#232838',
+        backgroundColor: colors.surfaceRaisedStrong,
         borderRadius: radius.full,
         overflow: 'hidden',
         marginTop: spacing.xs,

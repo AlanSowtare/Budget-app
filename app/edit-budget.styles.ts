@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
+import {ThemeColors, spacing, radius, fontSize, fonts} from '@/constants/theme';
 
-export const styles = StyleSheet.create({
+export const makeStyles = (colors: ThemeColors) => StyleSheet.create({
 
     root: {
         flex: 1,
@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.xl,
         padding: spacing.lg,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: colors.borderStrong,
     },
 
     field: {
@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: colors.borderStrong,
         paddingHorizontal: spacing.lg,
         paddingVertical: spacing.md,
     },
@@ -109,7 +109,7 @@ export const styles = StyleSheet.create({
     buttonText: {
         fontFamily: fonts.extraBold,
         fontSize: fontSize.lg,
-        color: '#0d2e22',
+        color: colors.onAccent,
     },
 
 });

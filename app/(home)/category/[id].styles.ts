@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import {colors, fontSize, radius, spacing, fonts} from "@/constants/theme";
+import {ThemeColors, fontSize, radius, spacing, fonts} from "@/constants/theme";
 
-export const styles = StyleSheet.create({
+export const makeStyles = (colors: ThemeColors) => StyleSheet.create({
 
     root: {
         flex: 1,
@@ -210,7 +210,7 @@ export const styles = StyleSheet.create({
     fabText: {
         fontFamily: fonts.bold,
         fontSize: fontSize.lg,
-        color: '#0d2e22',
+        color: colors.onAccent,
     },
 
 });

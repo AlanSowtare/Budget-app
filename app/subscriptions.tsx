@@ -12,12 +12,13 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useRouter} from 'expo-router';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useBudgetStore} from '@/store/budgetStore';
-import {styles} from './subscriptions.styles';
+import {makeStyles} from './subscriptions.styles';
 import {Subscription} from '@/domain/entities/Budget';
 import {formatCurrency} from '@/utils/currency';
 import {getSubscriptionsForMonth, ScheduledSubscription} from '@/utils/subscriptionSchedule';
 import {MONTHS} from '@/constants/months';
 import {SwipeableSubscriptionRow, SubscriptionRowItem} from '@/components/SwipeableSubscriptionRow';
+import {useTheme} from '@/hooks/useTheme';
 
 const db = SQLite.openDatabaseSync('budget.db');
 const SWIPE_HINT_FLAG = 'subscriptions_swipe_hint_shown';
@@ -56,6 +57,8 @@ const toRowItem = (
 export default function SubscriptionsScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const budgets = useBudgetStore(state => state.budgets);
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
     const todayKey = useBudgetStore(state => state.today);

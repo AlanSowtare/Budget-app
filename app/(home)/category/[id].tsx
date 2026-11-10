@@ -7,25 +7,28 @@ import {
 } from 'react-native';
 import {useRouter, useLocalSearchParams} from 'expo-router';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {styles} from './[id].styles';
+import {makeStyles} from './[id].styles';
 import {useBudgetStore} from "@/store/budgetStore";
-import {colors} from "@/constants/theme";
+import {useTheme} from '@/hooks/useTheme';
 import {Expense} from "@/domain/entities/Budget";
 import {SwipeableExpenseRow} from "@/components/SwipeableExpenseRow";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 
-const COLOR_MAP: Record<string, { base: string; dim: string }> = {
+const getCategoryColorMap = (colors: ReturnType<typeof useTheme>['colors']): Record<string, { base: string; dim: string }> => ({
     blue: {base: colors.blue, dim: colors.blueDim},
     purple: {base: colors.purple, dim: colors.purpleDim},
     orange: {base: colors.orange, dim: colors.orangeDim},
     pink: {base: colors.pink, dim: colors.pinkDim},
     danger: {base: colors.danger, dim: colors.dangerDim},
-};
+});
 
 export default function CategoryDetail() {
 
     const router = useRouter();
     const insets = useSafeAreaInsets();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
+    const categoryColorMap = getCategoryColorMap(colors);
 
     // Récupère l'id depuis la route /category/[id]
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -63,7 +66,7 @@ export default function CategoryDetail() {
             ? colors.warning
             : colors.accent;
 
-    const colorSet = COLOR_MAP[category?.color ?? 'blue'];
+    const colorSet = categoryColorMap[category?.color ?? 'blue'];
     const isOver = totalSpent > (category?.allocatedAmount ?? 0);
 
     // ── RENDU D'UNE LIGNE DE DÉPENSE ──

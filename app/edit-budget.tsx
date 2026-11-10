@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useMemo, useState} from 'react';
 import {
     View,
     Text,
@@ -9,14 +9,16 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useBudgetStore } from '@/store/budgetStore';
-import { colors } from '@/constants/theme';
+import {useTheme} from '@/hooks/useTheme';
 import { MONTHS } from '@/constants/months';
-import {styles} from "@/app/edit-budget.styles";
+import {makeStyles} from "@/app/edit-budget.styles";
 import {formatCurrency} from '@/utils/currency';
 
 export default function EditBudget() {
 
     const router = useRouter();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const budgets = useBudgetStore(state => state.budgets);
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
     const updateBudgetAmount = useBudgetStore(state => state.updateBudgetAmount);

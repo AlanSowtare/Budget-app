@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { styles } from './StepperInput.styles';
+import {makeStyles} from './StepperInput.styles';
+import {useTheme} from '@/hooks/useTheme';
 
 interface StepperInputProps {
     label: string;  // ex: "Mois" ou "Année"
@@ -19,6 +20,8 @@ export default function StepperInput({
                                          onChange,
                                          displayValue,
                                      }: StepperInputProps) {
+                                         const {colors} = useTheme();
+                                         const styles = useMemo(() => makeStyles(colors), [colors]);
 
     const decrement = () => {
         if (value > min) onChange(value - 1);

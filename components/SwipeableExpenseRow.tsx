@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import { View, Text, Alert, StyleSheet } from 'react-native';
 import Animated, {
     useAnimatedStyle,
@@ -12,7 +12,8 @@ import {
     GestureDetector,
 } from 'react-native-gesture-handler';
 import { Expense } from '@/domain/entities/Budget';
-import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
+import {ThemeColors, spacing, radius, fontSize, fonts} from '@/constants/theme';
+import {useTheme} from '@/hooks/useTheme';
 
 interface Props {
     item: Expense;
@@ -23,6 +24,8 @@ const DELETE_THRESHOLD = -80; // distance en px pour déclencher la suppression
 const DELETE_BTN_WIDTH = 80;
 
 export function SwipeableExpenseRow({ item, onDelete }: Props) {
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
 
     // useSharedValue = valeur réactive de Reanimated
     // Contrairement à useState, les changements ne causent pas de re-render React
@@ -130,7 +133,7 @@ export function SwipeableExpenseRow({ item, onDelete }: Props) {
     );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: ThemeColors) => StyleSheet.create({
     container: {
         marginBottom: spacing.sm,
         borderRadius: radius.md,

@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useBudgetStore } from '../store/budgetStore';
-import { colors } from '../constants/theme';
+import {useTheme} from '@/hooks/useTheme';
 
 export default function Index() {
 
     const router = useRouter();
-
+    const {colors} = useTheme();
     const budgets = useBudgetStore(state => state.budgets);
 
 

@@ -11,12 +11,14 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useBudgetStore } from '@/store/budgetStore';
-import { colors } from '@/constants/theme';
+import {useTheme} from '@/hooks/useTheme';
 import { MONTHS } from '@/constants/months';
 import StepperInput from '@/components/StepperInput';
-import { styles } from './add-budget.styles';
+import {makeStyles} from './add-budget.styles';
 export default function AddBudgetScreen() {
     const router = useRouter();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const budgets = useBudgetStore(state => state.budgets);
     const createBudget = useBudgetStore(state => state.createBudget);
     const setActiveBudget = useBudgetStore(state => state.setActiveBudget);

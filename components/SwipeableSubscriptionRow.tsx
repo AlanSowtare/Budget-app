@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {AccessibilityActionEvent, Text, TouchableOpacity, View} from 'react-native';
 import Animated, {
     useAnimatedStyle,
@@ -9,9 +9,10 @@ import Animated, {
     withTiming,
 } from 'react-native-reanimated';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import {styles} from '@/app/subscriptions.styles';
+import {makeStyles} from '@/app/subscriptions.styles';
 import {formatCurrency} from '@/utils/currency';
 import {spacing} from '@/constants/theme';
+import {useTheme} from '@/hooks/useTheme';
 
 export interface SubscriptionRowItem {
     id: string;
@@ -42,6 +43,8 @@ export function SwipeableSubscriptionRow({
     onToggle,
     onDelete,
 }: Props) {
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const translateX = useSharedValue(
         previewSwipe
             ? withSequence(

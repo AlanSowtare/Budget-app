@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, radius, fontSize, fonts } from '@/constants/theme';
+import {ThemeColors, spacing, radius, fontSize, fonts} from '@/constants/theme';
 
-export const styles = StyleSheet.create({
+export const makeStyles = (colors: ThemeColors) => StyleSheet.create({
 
     root: {
         flex: 1,
@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.xl,
         padding: spacing.lg,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: colors.borderStrong,
         gap: spacing.lg,
     },
 
@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: colors.borderStrong,
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.md,
     },
@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
         backgroundColor: colors.surface,
         borderRadius: radius.md,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: colors.borderStrong,
         paddingHorizontal: spacing.md,
     },
 
@@ -111,7 +111,7 @@ export const styles = StyleSheet.create({
         borderRadius: radius.sm,
         backgroundColor: colors.surface,
         borderWidth: 1.5,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: colors.borderStrong,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -169,7 +169,7 @@ export const styles = StyleSheet.create({
     buttonText: {
         fontFamily: fonts.extraBold,
         fontSize: fontSize.lg,
-        color: '#0d2e22',
+        color: colors.onAccent,
     },
 
 });

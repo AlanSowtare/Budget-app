@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useMemo, useState} from 'react';
 import {
     View,
     Text,
@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useBudgetStore } from '@/store/budgetStore';
-import { colors } from '@/constants/theme';
-import { styles } from './add-expense.styles';
+import {useTheme} from '@/hooks/useTheme';
+import {makeStyles} from './add-expense.styles';
 
 const EMOJIS = [
     '🛒', '🧃', '🥩', '🍕', '☕', '🥗', '🍰', '🥤',
@@ -22,6 +22,8 @@ const EMOJIS = [
 export default function AddExpense() {
 
     const router = useRouter();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
 
     // Récupère le categoryId passé en paramètre depuis l'écran détail
     const { categoryId } = useLocalSearchParams<{ categoryId: string }>();

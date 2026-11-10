@@ -8,28 +8,29 @@ import {
 } from 'react-native';
 import {useRouter} from 'expo-router';
 import {useBudgetStore} from '@/store/budgetStore';
-import {colors} from '@/constants/theme';
-import {styles} from './index.styles';
-import {subscriptionCardStyles} from './subscription-card.styles';
+import {ThemeColors} from '@/constants/theme';
+import {makeStyles} from './index.styles';
+import {makeSubscriptionCardStyles} from './subscription-card.styles';
 import {getSubscriptionsForMonth} from '@/utils/subscriptionSchedule';
 import {Category} from '@/domain/entities/Budget';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {MONTHS} from "@/constants/months";
 import {formatCurrency} from '@/utils/currency';
 import QuickActionsMenu from '@/components/QuickActionsMenu';
+import {useTheme} from '@/hooks/useTheme';
 
 
 // Map couleur → valeurs du theme
 // Permet de retrouver la bonne couleur à partir du champ "color" d'une Category
-const COLOR_MAP: Record<string, { base: string; dim: string }> = {
+const getCategoryColorMap = (colors: ThemeColors): Record<string, { base: string; dim: string }> => ({
     blue: {base: colors.blue, dim: colors.blueDim},
     purple: {base: colors.purple, dim: colors.purpleDim},
     orange: {base: colors.orange, dim: colors.orangeDim},
     pink: {base: colors.pink, dim: colors.pinkDim},
     danger: {base: colors.danger, dim: colors.dangerDim},
-};
+});
 
-const getCategoryRemainingBadge = (remainingPercent: number) => {
+const getCategoryRemainingBadge = (colors: ThemeColors, remainingPercent: number) => {
     if (remainingPercent <= 10) {
         return {
             textColor: colors.danger,
@@ -53,6 +54,10 @@ const getCategoryRemainingBadge = (remainingPercent: number) => {
 export default function HomeScreen() {
     const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
+    const subscriptionCardStyles = useMemo(() => makeSubscriptionCardStyles(colors), [colors]);
+    const categoryColorMap = getCategoryColorMap(colors);
     const budgets = useBudgetStore(state => state.budgets);
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
     const todayKey = useBudgetStore(state => state.today);
@@ -156,8 +161,8 @@ export default function HomeScreen() {
         const remainingPercent = Math.min(Math.round(categoryPercent), 100);
 
         const isOver = categorySpent > item.allocatedAmount;
-        const colorSet = COLOR_MAP[item.color] ?? COLOR_MAP.blue;
-        const remainingBadge = getCategoryRemainingBadge(remainingPercent);
+        const colorSet = categoryColorMap[item.color] ?? categoryColorMap.blue;
+        const remainingBadge = getCategoryRemainingBadge(colors, remainingPercent);
 
         return (
             <TouchableOpacity
@@ -258,6 +263,7 @@ export default function HomeScreen() {
                 onClose={() => setIsMenuOpen(false)}
                 onOpenBudgets={() => router.push('/budgets' as any)}
                 onOpenSubscriptions={() => router.push('/subscriptions' as any)}
+                onOpenAppearance={() => router.push('/appearance' as any)}
             />
 
             <FlatList

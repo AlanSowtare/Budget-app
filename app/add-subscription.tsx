@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import {useLocalSearchParams, useRouter} from 'expo-router';
 import {useBudgetStore} from '@/store/budgetStore';
-import {colors} from '@/constants/theme';
+import {useTheme} from '@/hooks/useTheme';
 import {MONTHS} from '@/constants/months';
-import {styles} from './add-subscription.styles';
+import {makeStyles} from './add-subscription.styles';
 import StepperInput from '@/components/StepperInput';
 import {Subscription} from '@/domain/entities/Budget';
 
@@ -25,6 +25,8 @@ const frequencies: {value: Subscription['frequency']; label: string}[] = [
 
 export default function AddSubscription() {
     const router = useRouter();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const {subscriptionId} = useLocalSearchParams<{ subscriptionId?: string }>();
 
     const addSubscription = useBudgetStore(state => state.addSubscription);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useMemo, useState} from 'react';
 import {
     View,
     Text,
@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useBudgetStore } from '../store/budgetStore';
-import { colors } from '../constants/theme';
-import { styles } from './onboarding.styles';
+import {useTheme} from '@/hooks/useTheme';
+import {makeStyles} from './onboarding.styles';
 import StepperInput from "@/components/StepperInput";
 import {MONTHS} from "@/constants/months";
 
@@ -19,6 +19,8 @@ export default function Onboarding() {
 
     const router = useRouter();
     const createBudget = useBudgetStore(state => state.createBudget);
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
 
     const [amount, setAmount] = useState('');
     const [month, setMonth] = useState(new Date().getMonth() + 1); // mois actuel (getMonth() commence à 0)

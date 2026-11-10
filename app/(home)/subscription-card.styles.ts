@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
-import {colors, fontSize, radius, spacing, fonts} from '@/constants/theme';
+import {ThemeColors, fontSize, radius, spacing, fonts} from '@/constants/theme';
 
-export const subscriptionCardStyles = StyleSheet.create({
+export const makeSubscriptionCardStyles = (colors: ThemeColors) => StyleSheet.create({
     card: {
         marginHorizontal: spacing.md,
         marginBottom: spacing.md,
@@ -9,9 +9,9 @@ export const subscriptionCardStyles = StyleSheet.create({
         borderRadius: radius.xl,
         padding: spacing.xl,
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.08)',
+        borderColor: colors.borderStrong,
         gap: spacing.sm,
-        shadowColor: '#000',
+        shadowColor: colors.shadow,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.18,
         shadowRadius: 18,
@@ -55,7 +55,7 @@ export const subscriptionCardStyles = StyleSheet.create({
         backgroundColor: colors.accentDim,
         borderRadius: radius.lg,
         borderWidth: 1,
-        borderColor: 'rgba(110,231,183,0.14)',
+        borderColor: colors.accentBorder,
         alignItems: 'center',
         paddingVertical: spacing.sm,
         minHeight: 48,

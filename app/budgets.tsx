@@ -9,15 +9,18 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBudgetStore } from '@/store/budgetStore';
+import {useTheme} from '@/hooks/useTheme';
 import { MONTHS } from '@/constants/months';
 import { formatCurrency } from '@/utils/currency';
-import { styles } from './budgets.styles';
+import {makeStyles} from './budgets.styles';
 import { Budget } from '@/domain/entities/Budget';
 import {getSubscriptionsForMonth} from '@/utils/subscriptionSchedule';
 const getBudgetSortValue = (budget: Budget) => (budget.year * 100) + budget.month;
 export default function BudgetsScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
+    const {colors} = useTheme();
+    const styles = useMemo(() => makeStyles(colors), [colors]);
     const budgets = useBudgetStore(state => state.budgets);
     const activeBudgetId = useBudgetStore(state => state.activeBudgetId);
     const todayKey = useBudgetStore(state => state.today);

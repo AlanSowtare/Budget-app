@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
-import {colors, fontSize, radius, spacing, fonts} from '@/constants/theme';
+import {ThemeColors, fontSize, radius, spacing, fonts} from '@/constants/theme';
 
-export const styles = StyleSheet.create({
+export const makeStyles = (colors: ThemeColors) => StyleSheet.create({
     root: {
         flex: 1,
         backgroundColor: colors.bg,
